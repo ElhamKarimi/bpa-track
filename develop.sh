@@ -1,6 +1,8 @@
 #!/bin/bash
 # Script to control ${PROJECT_NAME} in dev and test
 
+trap catch_errors ERR
+
 TOPDIR=$(cd $(dirname $0); pwd)
 
 ACTION=$1
@@ -17,7 +19,13 @@ COLOR_RED=$(tput setaf 1)
 COLOR_YELLOW=$(tput setaf 3)
 COLOR_GREEN=$(tput setaf 2)
 
-set -e
+# set -e
+catch_errors() {
+   exit_code=$?
+   echo "Script aborted because of errors"
+   exit $exit_code
+}
+
 
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}
@@ -113,6 +121,7 @@ entrypoint() {
 
 
 dockerbuild() {
+   echo "Building containers"
    activate_virtualenv
 
    image="muccg/${PROJECT_NAME}"
