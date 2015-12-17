@@ -1,31 +1,24 @@
 #!/bin/bash
 # Script to control ${PROJECT_NAME} in dev and test
 
-trap catch_errors ERR
+readonly PROJECT_NAME='bpatrack'
+readonly TOPDIR=$(cd $(dirname $0); pwd)
+readonly PROGNAME=$(basename $0)
+readonly PROGDIR=$(readlink -m $(dirname $0))
+readonly ARGS="$@"
+readonly ACTION=$1
+readonly DATE=$(date +%Y.%m.%d)
 
-TOPDIR=$(cd $(dirname $0); pwd)
 
-ACTION=$1
-
-PROJECT_NAME='bpatrack'
 VIRTUALENV="${HOME}/virt_${PROJECT_NAME}"
 : ${DOCKER_BUILD_OPTIONS:="--pull=true"}
 
-DATE=$(date +%Y.%m.%d)
 
 ######### Logging ##########
-COLOR_NORMAL=$(tput sgr0)
-COLOR_RED=$(tput setaf 1)
-COLOR_YELLOW=$(tput setaf 3)
-COLOR_GREEN=$(tput setaf 2)
-
-# set -e
-catch_errors() {
-   exit_code=$?
-   echo "Script aborted because of errors"
-   exit $exit_code
-}
-
+readonly COLOR_NORMAL=$(tput sgr0)
+readonly COLOR_RED=$(tput setaf 1)
+readonly COLOR_YELLOW=$(tput setaf 3)
+readonly COLOR_GREEN=$(tput setaf 2)
 
 log_error() {
     echo ${COLOR_RED}ERROR: $* ${COLOR_NORMAL}
@@ -45,16 +38,24 @@ log_info() {
 
 # no news is good news
 log() {
-    ERROR_CODE=$0
-    MESSAGE=$1
+    local error_code=$0
+    local message=$1
 
-    if [ ${ERROR_CODE} != 0 ]
+    if [ ${error_code} != 0 ]
     then
-        log_warning ${MESSAGE}
+        log_warning ${message}
     else
-        log_success ${MESSAGE}
+        log_success ${message}
     fi
  }
+
+# set -e
+trap catch_errors ERR
+catch_errors() {
+   local exit_code=$?
+   log_error "Script aborted because of errors"
+   exit $exit_code
+}
 
 activate_virtualenv() {
    if [ ! -d ${VIRTUALENV} ]
@@ -114,42 +115,43 @@ rm_containers() {
 }
 
 entrypoint() {
-   ENTRYPOINT=${1:-bash}
-   log_info "Entrypoint ${ENTRYPOINT}"
-   docker exec -it ${PROJECT_NAME}_runserver_1 ${ENTRYPOINT} $2
+   local entrypoint=${1:-bash}
+   log_info "Entrypoint ${entrypoint}"
+   docker exec -it ${PROJECT_NAME}_runserver_1 ${entrypoint} $2
 }
 
 
 dockerbuild() {
-   echo "Building containers"
+   log_info "Building containers"
    activate_virtualenv
 
-   image="muccg/${PROJECT_NAME}"
-   gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
-   gittag=$(git describe --abbrev=0 --tags 2> /dev/null)
+   local image="muccg/${PROJECT_NAME}"
+   local gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+   local gittag=$(git describe --abbrev=0 --tags 2> /dev/null)
 
    # only use tags when on master (release) branch
-   if [ $gitbranch != "master" ]
+   if [ ${gitbranch} != "master" ]
    then
-      echo "Ignoring tags, not on master branch"
+      log_info "Ignoring tags, not on master branch"
       gittag=$gitbranch
    fi
 
    # if no git tag, then use branch name
    if [ -z ${gittag+x} ]
    then
-      echo "No git tag set, using branch name"
+      log_info "No git tag set, using branch name"
       gittag=$gitbranch
    fi
 
-   echo "############################################################# ${PROJECT_NAME} ${gittag}"
+   log_info "Building ${PROJECT_NAME} ${gittag}"
 
    # attempt to warm up docker cache
    docker pull ${image} || true
 
+   local tag
    for tag in "${image}:${gittag}" "${image}:${gittag}-${DATE}"
    do
-      echo "############################################################# ${PROJECT_NAME} ${tag}"
+      echo "Building tag ${PROJECT_NAME} ${tag}"
       set -x
       docker build ${DOCKER_BUILD_OPTIONS} --build-arg GIT_TAG=${gittag} -t ${tag} -f Dockerfile.release .
       docker push ${tag}
@@ -159,21 +161,29 @@ dockerbuild() {
 
 
 usage() {
-   echo 'Usage ./develop.sh (build|shell|unit_tests|selenium|superuser|up|rm|runscript|ingest_all)'
+cat << EOF
+Usage: ${PROGNAME} options
 
-   echo '                   build        Build all images'
-   echo '                   dockerbuild  Build and push new docker images from current checked out tag'
-   echo '                   shell        Create and shell into a new web image, used for db checking with Django env available'
-   echo '                   superuser    Create Django superuser'
-   echo '                   runscript    Run one of the available scripts' 
-   echo '                   ingest_all   Ingest metadata'
-   echo '                   checksecure  Run security check'
-   echo '                   up           Spins up docker development stack'
-   echo '                   rm           Remove all containers'
-   echo '                   pythonlint   Run python lint'
-   echo '                   unit_tests   Run unit tests'
-   echo '                   selenium     Run selenium tests'
-   echo '                   usage'
+Wrapper script to call common tools while developing ${PROJECT_NAME}
+
+OPTIONS:
+       build       Build all images
+       dockerbuild Build and push new docker images from current checked out tag
+       shell       Create and shell into a new web image, used for db checking with Django env available
+       superuser   Create Django superuser
+       runscript   Run one of the available scripts
+       checksecure Run security check
+       up          Spins up docker development stack
+       rm          Remove all containers
+       pythonlint  Run python lint
+       unit_tests  Run unit tests
+       selenium    Run selenium tests
+       usage       Print this usage
+
+Examples:
+       ${PROGNAME} build
+       ${PROGNAME} rm
+EOF
 }
 
 case ${ACTION} in
