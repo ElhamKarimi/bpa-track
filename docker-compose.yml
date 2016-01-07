@@ -1,32 +1,25 @@
-data:
-  image: muccg/debian8-base
+postgres:
+  image: postgres:9.5
   volumes:
-    - .:/app
-    - ./data/dev:/data
+    - /data/bpa_datatracker/postgres:/var/lib/postgresql/data
+  env_file: .env
 
-db:
-  image: postgres:9.4
-  environment:
-    - POSTGRES_USER=webapp
-    - POSTGRES_PASSWORD=webapp
-  ports:
-    - 5432
-
-cache:
-  image: memcached:1.4
-
-
-web:
+django:
   build: .
-  command: runserver
-  environment:
-    - DJANGO_SETTINGS_MODULE=bpatrack.settings
-    - DBUSER=webapp
-  volumes_from:
-    - data
-  ports:
-    - "8000:8000"
+  user: django
   links:
-    - db
-    - cache
+    - postgres
+    - redis
+  command: /gunicorn.sh
+  env_file: .env
+
+nginx:
+  build: ./compose/nginx
+  links:
+    - django
+  ports:
+    - "0.0.0.0:80:80"
+
+redis:
+  image: redis:3.0
 
