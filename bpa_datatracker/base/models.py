@@ -9,9 +9,11 @@ class SampleReception(models.Model):
            ("RAM", "Ramaciotti Centre for Genomics"),
            )
 
-    vendor = models.CharField(max_length=5, choices=VENDORS)
-    extraction_id = models.CharField(max_length=12)
+    vendor = models.CharField(max_length=5, choices=VENDORS, null=True)
+    extraction_id = models.CharField(max_length=12, primary_key=True)
     batch_number = models.CharField(max_length=20)
     date_received = models.DateField()
     submitter = User()
 
+    def __str__(self):
+        return "{} {} received at {}".format(self.extraction_id, self.batch_number, self.date_received)

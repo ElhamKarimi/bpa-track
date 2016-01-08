@@ -34,3 +34,5 @@ django-redis==4.3.0
 redis>=2.10.0
 
 django-suit==0.2.15
+django-import-export
+python-dateutil
