@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     'bpa_datatracker.users',  # custom users app
+    'bpa_datatracker.common', # common usefull things
     'bpa_datatracker.base',
 )
 

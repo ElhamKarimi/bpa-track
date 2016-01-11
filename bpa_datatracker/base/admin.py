@@ -21,7 +21,6 @@ class DateField(fields.Field):
 class UserWidget(widgets.ForeignKeyWidget):
     def __init__(self):
         self.model = User
-        
         self.username = ""
         self.firstname = ""
         self.lastname = ""
@@ -29,7 +28,7 @@ class UserWidget(widgets.ForeignKeyWidget):
     def _set_name(self, name_from_source):
         "use first letter from first name and whole of last name, eurocentric"
 
-        parts = name_from_source.split()
+        parts = name_from_source.lower().split()
         if len(parts) >= 2:
             self.firstname = parts[0]
             self.lastname = parts[-1]

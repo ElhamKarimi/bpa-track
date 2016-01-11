@@ -49,14 +49,7 @@ log() {
     fi
  }
 
-# set -e
-trap catch_errors ERR
-catch_errors() {
-   local exit_code=$?
-   log_error "Script aborted because of errors"
-   exit $exit_code
-}
-
+set -e
 activate_virtualenv() {
    if [ ! -d ${VIRTUALENV} ]
    then
@@ -117,7 +110,7 @@ rm_containers() {
 entrypoint() {
    local entrypoint=${1:-bash}
    log_info "Entrypoint ${entrypoint}"
-   docker exec -it ${PROJECT_NAME}_runserver_1 ${entrypoint} $2
+   docker exec -it ${PROJECT_NAME}_web_1 ${entrypoint} $2
 }
 
 
@@ -213,28 +206,22 @@ up)
     up
     ;;
 shell)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /bin/bash
+    docker exec -it ${PROJECT_NAME}_web_1 /bin/bash
     ;;
 admin)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin $2
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh admin $2
     ;;
 superuser)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh superuser
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh superuser
     ;;
 runscript)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh runscript $2
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh runscript $2
     ;;
 nuclear)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh nuclear
-    ;;
-unit_tests)
-    unit_tests
-    ;;
-selenium)
-    selenium
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh nuclear
     ;;
 checksecure)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh checksecure
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh checksecure
     ;;
 *)
     usage

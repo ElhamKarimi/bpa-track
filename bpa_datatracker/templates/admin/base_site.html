@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% load admin_static %}
+{% load commontags %}
+
+{% block extrastyle %}
+{% endblock %}
+
+{% block extrajs %}
+    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+    <script type="text/javascript"
+            src="https://ccgmurdoch.atlassian.net/s/en_US-5aaqb5-1988229788/6080/26/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?collectorId=9e6e31d4"></script>
+    </body>
+{% endblock %}
+
+
+{% block footer_links %}
+    <button type="button" class="btn btn-default btn-lg" onclick="TogetherJS(this); return false;">
+        <span class="glyphicon glyphicon-globe"></span> Collaborate
+    </button>
+
+    <a href="https://downloads.bioplatforms.com" class="icon">Downloads</a>
+{% endblock %}
+
+{% block footer_branding %}
+    Bioplatforms Australia Metadata Version: {% datatracker_version %}
+{% endblock %}
+
+
+{% block copyright %}
+    Copyright &copy; Bioplatforms Australia<br>Developed by
+    <a href="http://ccg.murdoch.edu.au" target="_blank">Center for Comparative Genomics, Murdoch University</a>
+{% endblock %}
