@@ -4,8 +4,12 @@ from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
 from bpa_datatracker.users.models import User
+from bpa_datatracker.users.admin import UserWidget
+
 from bpa_datatracker.common.models import Facility
-from .models import SampleReceived
+from bpa_datatracker.common.admin import FacilityWidget
+
+from .models import SampleReceived, Amplicon
 
 class DateField(fields.Field):
     """
@@ -19,36 +23,6 @@ class DateField(fields.Field):
     def clean(self, data):
         return date_parser(data[self.column_name])
 
-class UserWidget(widgets.ForeignKeyWidget):
-    def __init__(self):
-        self.model = User
-        self.username = ""
-        self.firstname = ""
-        self.lastname = ""
-
-    def _set_name(self, name_from_source):
-        """Use first letter from first name and whole of last name, eurocentric"""
-
-        parts = name_from_source.lower().split()
-        if len(parts) >= 2:
-            self.firstname = parts[0]
-            self.lastname = parts[-1]
-            self.username = self.firstname[0] + self.lastname
-        else:
-            self.firstname = parts[0]
-            self.lastname = parts[0]
-            self.username = self.lastname
-
-
-    def clean(self, value):
-        self._set_name(value)
-
-        user, _ = self.model.objects.get_or_create(
-                first_name=self.firstname,
-                last_name=self.lastname,
-                username=self.username)
-
-        return user
 
 
 class SampleReceivedResource(resources.ModelResource):
@@ -62,12 +36,18 @@ class SampleReceivedResource(resources.ModelResource):
             widget=UserWidget()
             )
 
+    facility= fields.Field(
+            attribute='facility',
+            column_name='Facility',
+            widget=FacilityWidget()
+            )
+
     class Meta:
         model = SampleReceived
         import_id_fields = ('extraction_id', )
         export_order = (
                 'extraction_id',
-                # 'facility',
+                'facility',
                 'batch_number',
                 'date_received',
                 'submitter')
@@ -77,10 +57,11 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
     resource_class = SampleReceivedResource
     list_display = (
             'extraction_id',
-            # 'facility';,
+            'facility',
             'batch_number',
             'date_received',
             'submitter')
 
     date_hierarchy = 'date_received'
 
+admin.site.register(Amplicon)

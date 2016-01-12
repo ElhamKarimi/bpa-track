@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 from django import forms
 from django.contrib import admin
+from import_export import resources, fields, widgets
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
@@ -36,3 +37,36 @@ class MyUserCreationForm(UserCreationForm):
 class UserAdmin(AuthUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
+
+
+class UserWidget(widgets.ForeignKeyWidget):
+    def __init__(self):
+        self.model = User
+        self.field = "username"
+        self.username = ""
+        self.firstname = ""
+        self.lastname = ""
+
+    def _set_name(self, name_from_source):
+        # Use first letter from first name and whole of last name.
+
+        parts = name_from_source.lower().split()
+        if len(parts) >= 2:
+            self.firstname = parts[0]
+            self.lastname = parts[-1]
+            self.username = self.firstname[0] + self.lastname
+        else:
+            self.firstname = parts[0]
+            self.lastname = parts[0]
+            self.username = self.lastname
+
+
+    def clean(self, value):
+        self._set_name(value)
+
+        user, _ = self.model.objects.get_or_create(
+                first_name=self.firstname,
+                last_name=self.lastname,
+                username=self.username)
+
+        return user
