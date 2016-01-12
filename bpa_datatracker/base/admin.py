@@ -4,6 +4,7 @@ from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
 from bpa_datatracker.users.models import User
+from bpa_datatracker.common.models import Facility
 from .models import SampleReceived
 
 class DateField(fields.Field):
@@ -26,7 +27,7 @@ class UserWidget(widgets.ForeignKeyWidget):
         self.lastname = ""
 
     def _set_name(self, name_from_source):
-        "use first letter from first name and whole of last name, eurocentric"
+        """Use first letter from first name and whole of last name, eurocentric"""
 
         parts = name_from_source.lower().split()
         if len(parts) >= 2:
@@ -49,13 +50,8 @@ class UserWidget(widgets.ForeignKeyWidget):
 
         return user
 
-    def render(self, value):
-        return value
-
 
 class SampleReceivedResource(resources.ModelResource):
-
-    vendor = fields.Field(attribute='vendor', column_name='Vendor')
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
     batch_number = fields.Field(attribute='batch_number', column_name='Batch number')
     date_received = DateField(attribute='date_received', column_name='Date received')
@@ -63,7 +59,6 @@ class SampleReceivedResource(resources.ModelResource):
     submitter = fields.Field(
             attribute='submitter',
             column_name='Submitter Name',
-            # widget=widgets.ForeignKeyWidget(User, field="username"))
             widget=UserWidget()
             )
 
@@ -72,7 +67,7 @@ class SampleReceivedResource(resources.ModelResource):
         import_id_fields = ('extraction_id', )
         export_order = (
                 'extraction_id',
-                'vendor',
+                # 'facility',
                 'batch_number',
                 'date_received',
                 'submitter')
@@ -81,11 +76,11 @@ class SampleReceivedResource(resources.ModelResource):
 class SampleReceivedAdmin(ImportExportModelAdmin):
     resource_class = SampleReceivedResource
     list_display = (
-            'vendor',
             'extraction_id',
+            # 'facility';,
             'batch_number',
             'date_received',
             'submitter')
+
     date_hierarchy = 'date_received'
-    empty_value_display = '-empty-'
 

@@ -32,7 +32,7 @@ DJANGO_APPS = (
     # 'django.contrib.humanize',
 
     # Admin
-    'suit',
+    # 'suit',
     'django.contrib.admin',
 )
 
