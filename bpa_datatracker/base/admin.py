@@ -64,4 +64,9 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
 
     date_hierarchy = 'date_received'
 
-admin.site.register(Amplicon)
+@admin.register(Amplicon)
+class AmpliconAdmin(admin.ModelAdmin):
+    model = Amplicon
+    list_display = ('sample_extraction_id', 'sequencing_facility', 'target', 'comments')
+    search_fields = ('sample_extraction_id', 'sequencing_facility__name', 'target', 'comments')
+

@@ -40,3 +40,7 @@ python-dateutil
 # temp get master as I need xlsx support
 # https://github.com/django-import-export/django-import-export/archive/master.zip
 django-import-export
+openpyxl
+xlrd
+unipath
+beautifulsoup4

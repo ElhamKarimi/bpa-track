@@ -3,10 +3,8 @@ from django.db import models
 class Facility(models.Model):
     """ The Sequencing Facility """
 
-    FACILITIES = (('RAM',' Ramaciotti'),
-                  ('AGRF', 'AGRF'))
-
-    name = models.CharField('Facility Name', max_length=4, choices=FACILITIES, primary_key=True)
+    name = models.CharField('Facility Name', max_length=10, primary_key=True)
+    description = models.CharField('Description', max_length=100, blank=True)
     note = models.TextField(blank=True)
 
     class Meta:
