@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from bpa_datatracker.users.models import User
 from bpa_datatracker.common.models import Facility
