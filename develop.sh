@@ -8,10 +8,10 @@ readonly TOPDIR=$(cd $(dirname $0); pwd)
 readonly PROGNAME=$(basename $0)
 readonly PROGDIR=$(readlink -m $(dirname $0))
 readonly ARGS="$@"
-readonly ACTION=$1
 readonly DATE=$(date +%Y.%m.%d)
+readonly ACTION=${1:-"help"}
 
-: ${PROJECT_NAME:='bpadatatracker'}
+: ${PROJECT_NAME:="bpadatatracker"}
 : ${DOCKER_BUILD_OPTIONS:="--pull=true"}
 
 readonly VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
@@ -160,6 +160,9 @@ EOF
 }
 
 case ${ACTION} in
+   help)
+      usage
+      ;;
    pythonlint)
       pythonlint
       ;;
