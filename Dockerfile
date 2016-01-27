@@ -1,5 +1,4 @@
-# FROM python:3.5
-FROM muccg/python-base:debian8-3.4
+FROM muccg/python-base:debian8-3.5
 
 ENV PYTHONUNBUFFERED 1
 
