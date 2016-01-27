@@ -50,7 +50,7 @@ runserver:
     - cache
 
 uwsgi:
-  image: datatracker_runserver
+  image: bpadatatracker_runserver
   command: uwsgi
   environment:
     - DBUSER=webapp

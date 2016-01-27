@@ -11,19 +11,43 @@ readonly ARGS="$@"
 readonly ACTION=$1
 readonly DATE=$(date +%Y.%m.%d)
 
-: ${PROJECT_NAME:='bpatrack'}
+: ${PROJECT_NAME:='bpadatatracker'}
 : ${DOCKER_BUILD_OPTIONS:="--pull=true"}
 
+readonly VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
+
+prepare_virtualenv() {
+   # common dev tools are installed into a local virtualenv
+   # virtualenv must be available
+   which virtualenv > /dev/null
+   if [ ! -e ${VIRTUALENV} ]
+   then
+      virtualenv ${VIRTUALENV}
+   fi
+
+   set +o nounset
+   . ${VIRTUALENV}/bin/activate 
+   set -o nounset
+
+   pip install "pip==8.0.2" --upgrade || true
+   pip install functools32 --upgrade || true
+   pip install 'docker-compose<1.6' --upgrade || true
+   pip install flake8 --upgrade || true
+   pip install pep8 --upgrade || true
+
+   docker-compose --version
+}
 
 ci_docker_login() {
-    if [ -n "$bamboo_DOCKER_USERNAME" ] && [ -n "$bamboo_DOCKER_EMAIL" ] && [ -n "$bamboo_DOCKER_PASSWORD" ]; then
-        docker login  -e "${bamboo_DOCKER_EMAIL}" -u ${bamboo_DOCKER_USERNAME} --password="${bamboo_DOCKER_PASSWORD}"
-    else
-        echo "Docker vars not set, not logging in to docker registry"
-    fi
+   if [ -n "$bamboo_DOCKER_USERNAME" ] && [ -n "$bamboo_DOCKER_EMAIL" ] && [ -n "$bamboo_DOCKER_PASSWORD" ]; then
+      docker login  -e "${bamboo_DOCKER_EMAIL}" -u ${bamboo_DOCKER_USERNAME} --password="${bamboo_DOCKER_PASSWORD}"
+   else
+      echo "Docker vars not set, not logging in to docker registry"
+   fi
 }
 
 pythonlint() {
+   prepare_virtualenv
    flake8 bpam --exclude=migrations,.ropeproject --ignore=E501,E303 --count
 }
 
@@ -31,13 +55,15 @@ pythonlint() {
 unit_tests() {
    mkdir -p data/tests
    chmod o+rwx data/tests
+   prepare_virtualenv
    docker-compose --project-name ${PROJECT_NAME} -f fig-test.yml up
 }
 
 up() {
    mkdir -p data/dev
    chmod o+rwx data/dev
-
+   
+   prepare_virtualenv
    docker-compose --project-name ${PROJECT_NAME} up
 }
 
@@ -46,27 +72,31 @@ selenium() {
    mkdir -p data/selenium
    chmod o+rwx data/selenium
 
+   prepare_virtualenv
    docker-compose --project-name ${PROJECT_NAME} -f fig-selenium.yml up
 }
 
 
 build() {
+   prepare_virtualenv
    docker-compose --project-name ${PROJECT_NAME} build
 }
 
 rm_containers() {
+   prepare_virtualenv
    docker-compose --project-name ${PROJECT_NAME} rm
 }
 
 entrypoint() {
    local entrypoint=${1:-bash}
-   log_info "Entrypoint ${entrypoint}"
+   echo "Entrypoint ${entrypoint}"
    docker exec -it ${PROJECT_NAME}_web_1 ${entrypoint} $2
 }
 
 
 dockerbuild() {
-   log_info "Building containers"
+   prepare_virtualenv
+   echo "Building containers"
 
    local image="muccg/${PROJECT_NAME}"
    local gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
@@ -75,18 +105,18 @@ dockerbuild() {
    # only use tags when on master (release) branch
    if [ ${gitbranch} != "master" ]
    then
-      log_info "Ignoring tags, not on master branch"
+      echo "Ignoring tags, not on master branch"
       gittag=$gitbranch
    fi
 
    # if no git tag, then use branch name
    if [ -z ${gittag+x} ]
    then
-      log_info "No git tag set, using branch name"
+      echo "No git tag set, using branch name"
       gittag=$gitbranch
    fi
 
-   log_info "Building ${PROJECT_NAME} ${gittag}"
+   echo "Building ${PROJECT_NAME} ${gittag}"
 
    # attempt to warm up docker cache
    docker pull ${image} || true
@@ -97,7 +127,7 @@ dockerbuild() {
       echo "Building tag ${PROJECT_NAME} ${tag}"
       set -x
       docker build ${DOCKER_BUILD_OPTIONS} --build-arg GIT_TAG=${gittag} -t ${tag} -f Dockerfile.release .
-      docker push ${tag}
+      # docker push ${tag}
       set +x
    done
 }
