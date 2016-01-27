@@ -20,10 +20,10 @@ ENV LOG_DIRECTORY /data/log
 ENV DJANGO_SETTINGS_MODULE production.settings
 
 ENV DEBIAN_FRONTEND noninteractive
-
 # Project specific deps
 RUN apt-get update && apt-get install -y \
   build-essential \
+  git \
   libpq-dev \
   libssl-dev \
   libxml2-dev \
@@ -34,14 +34,13 @@ RUN apt-get update && apt-get install -y \
 RUN env --unset=DEBIAN_FRONTEND
 
 # install python deps
-COPY . /app
 WORKDIR /app
 COPY .version /.version
-RUN pip ${PIP_OPTS} install -r requirements/runtime-requirements.txt
-# RUN /env/bin/pip ${PIP_OPTS} install -e bpatrack
+RUN echo $GIT_TAG \
+    && git clone --depth=1 --branch=$GIT_TAG https://github.com/muccg/bpa-datatracker.git . \
+    && rm -rf .git
 
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN pip ${PIP_OPTS} install -r requirements/runtime-requirements.txt
 
 EXPOSE 9000 9001 
 VOLUME ["/data"]
@@ -50,5 +49,5 @@ USER ccg-user
 ENV HOME /data
 WORKDIR /data
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["uwsgi"]
