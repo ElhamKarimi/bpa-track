@@ -14,11 +14,8 @@ WORKDIR /app
 # install python deps
 COPY ./requirements /app/
 
-RUN pip freeze
+# RUN pip freeze
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/local.txt
-
-# Copy code and install the app
-COPY . /app
 
 EXPOSE 8000 9000 9001 9100 9101
 VOLUME ["/app", "/data"]

@@ -60,3 +60,4 @@ staticfiles/
 
 virt_bpadatatracker/
 .version
+data/

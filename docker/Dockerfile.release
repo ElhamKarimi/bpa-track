@@ -17,7 +17,7 @@ ENV STATIC_ROOT /data/static
 ENV WRITABLE_DIRECTORY /data/scratch
 ENV MEDIA_ROOT /data/static/media
 ENV LOG_DIRECTORY /data/log
-ENV DJANGO_SETTINGS_MODULE production.settings
+ENV DJANGO_SETTINGS_MODULE settings.production
 
 ENV DEBIAN_FRONTEND noninteractive
 # Project specific deps

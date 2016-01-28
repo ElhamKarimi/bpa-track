@@ -4,12 +4,6 @@ datadev:
     - .:/app
     - ./data/dev:/data
 
-datatest:
-  image: muccg/debian8-base
-  volumes:
-    - .:/app
-    - ./data/tests:/data
-
 db:
   image: postgres:9.5
   volumes:
@@ -25,6 +19,7 @@ runserver:
   build: .
   command: runserver
   environment:
+    - DJANGO_SETTINGS_MODULE=config.settings.local
     - DBUSER=webbapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
@@ -54,15 +49,11 @@ uwsgi:
   links:
     - db
     - cache
-    - runserver:web
+    - runserver
 
 nginx:
   image: muccg/nginx-uwsgi:1.9
-  links:
-    - uwsgi
   ports:
     - "8443:443"
-  volumes_from:
-    - datadev
-  volumes:
-    - ./data/nginx:/data
+  links:
+    - uwsgi
