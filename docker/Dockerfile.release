@@ -2,7 +2,7 @@ FROM muccg/python-base:debian8-3.5
 MAINTAINER https://github.com/muccg/bpa-datatracker
 
 ENV PYTHONUNBUFFERED=1
-
+ENV PIP_VERSION="8.0.2"
 ARG PIP_OPTS="--no-cache-dir"
 ARG GIT_TAG=next_release
 ENV GIT_TAG $GIT_TAG
@@ -35,7 +35,8 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN env --unset=DEBIAN_FRONTEND
 
-RUN pip install --upgrade "pip==8.0.2"
+RUN pyvenv $VIRTUAL_ENV
+RUN pip install --upgrade "pip==$PIP_VERSION"
 
 # install python deps
 WORKDIR /app

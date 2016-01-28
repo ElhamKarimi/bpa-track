@@ -21,18 +21,6 @@ db:
 cache:
   image: memcached:1.4
 
-
-nginx:
-  image: muccg/nginx-uwsgi:1.9
-  links:
-    - uwsgi
-  ports:
-    - "8443:443"
-  volumes_from:
-    - datadev
-  volumes:
-    - ./data/nginx:/data
-
 runserver:
   build: .
   command: runserver
@@ -40,7 +28,6 @@ runserver:
     - DBUSER=webbapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
-    - WAIT_FOR_REPORTING=1
   ports:
     - "8000:8000"
   volumes_from:
@@ -68,3 +55,14 @@ uwsgi:
     - db
     - cache
     - runserver:web
+
+nginx:
+  image: muccg/nginx-uwsgi:1.9
+  links:
+    - uwsgi
+  ports:
+    - "8443:443"
+  volumes_from:
+    - datadev
+  volumes:
+    - ./data/nginx:/data
