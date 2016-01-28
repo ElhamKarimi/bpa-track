@@ -1,8 +1,8 @@
 FROM muccg/python-base:debian8-3.5
 MAINTAINER https://github.com/muccg/bpa-datatracker
 
-ENV PYTHONUNBUFFERED=1
-ENV PIP_VERSION="8.0.2"
+ENV PIP_VERSION "8.0.2"
+ENV PYTHONUNBUFFERED 1
 ARG PIP_OPTS="--no-cache-dir"
 ARG GIT_TAG=next_release
 ENV GIT_TAG $GIT_TAG
