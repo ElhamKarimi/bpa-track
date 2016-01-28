@@ -30,8 +30,12 @@ RUN apt-get update && apt-get install -y \
   libxslt1-dev \
   postgresql-client \
   libyaml-dev \
+  libjpeg62-turbo-dev \
+  libfreetype6-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN env --unset=DEBIAN_FRONTEND
+
+RUN pip install --upgrade "pip==8.0.2"
 
 # install python deps
 WORKDIR /app
@@ -40,7 +44,7 @@ RUN echo $GIT_TAG \
     && git clone --depth=1 --branch=$GIT_TAG https://github.com/muccg/bpa-datatracker.git . \
     && rm -rf .git
 
-RUN pip ${PIP_OPTS} install -r requirements/runtime-requirements.txt
+RUN pip ${PIP_OPTS} install -r requirements/production.txt
 
 EXPOSE 9000 9001 
 VOLUME ["/data"]

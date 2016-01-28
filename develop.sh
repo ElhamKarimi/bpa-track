@@ -121,6 +121,10 @@ dockerbuild() {
    # attempt to warm up docker cache
    docker pull ${image} || true
 
+   # create .version file for invalidating cache in Dockerfile
+   # we hit remote as the Dockerfile clones remote
+   git ls-remote https://github.com/muccg/bpa-datatracker.git ${gittag} > .version
+
    local tag
    for tag in "${image}:${gittag}" "${image}:${gittag}-${DATE}"
    do
