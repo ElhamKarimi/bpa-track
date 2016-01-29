@@ -1,0 +1,38 @@
+# -*- coding: utf-8 -*-
+FROM muccg/bpatrack-build
+MAINTAINER https://github.com/muccg/bpa-track/
+
+ARG PIP_OPTS="--no-cache-dir"
+
+ENV DEPLOYMENT dev
+ENV PRODUCTION 0
+ENV DEBUG 1
+
+USER root
+WORKDIR /app
+
+# install python deps
+COPY ./requirements /app/
+
+RUN pip freeze
+RUN pip ${PIP_OPTS} uninstall -y bpatrack
+RUN pip ${PIP_OPTS} install --upgrade -r requirements/test.txt
+RUN pip ${PIP_OPTS} install --upgrade -r requirements/production.txt
+RUN pip ${PIP_OPTS} install --upgrade -r requirements/local.txt
+RUN pip ${PIP_OPTS} install --upgrade -r requirements/base.txt
+
+# Copy code and install the app
+COPY . /app
+RUN pip ${PIP_OPTS} install -e bpatrack
+
+EXPOSE 8000 9000 9001 9100 9101
+VOLUME ["/app", "/data"]
+
+# Allow celery to run as root for dev
+ENV C_FORCE_ROOT=1
+ENV HOME /data
+WORKDIR /data
+
+# entrypoint shell script that by default starts runserver
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["runserver"]

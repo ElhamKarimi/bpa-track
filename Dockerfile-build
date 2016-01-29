@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+FROM muccg/bpatrack
+MAINTAINER https://github.com/muccg/bpa-track/
+
+ARG ARG_GIT_TAG=next_release
+ARG PIP_OPTS="--no-cache-dir"
+
+ENV GIT_TAG $ARG_GIT_TAG
+
+# Project specific deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
+  git \
+  libpq-dev \
+  libxml2-dev \
+  libxslt1-dev \
+  libssl-dev \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN env --unset=DEBIAN_FRONTEND
+
+WORKDIR /app
+COPY .version /.version
+RUN cat /.version
+RUN echo $GIT_TAG \
+    && git clone --depth=1 --branch=$GIT_TAG https://github.com/muccg/bpa-track.git .
+
+RUN pip freeze
+RUN virtualenv /env
+RUN pip ${PIP_OPTS} install --upgrade -r requirements/production.txt
+RUN pip ${PIP_OPTS} install -e bpatrack
+
+EXPOSE 9100 9101
+VOLUME ["/data"]
+
+# Allow celery to run as root for dev
+USER ccg-user
+ENV HOME /data
+WORKDIR /data
+
+# entrypoint shell script that by default starts runserver
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["tarball"]

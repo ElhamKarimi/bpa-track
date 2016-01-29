@@ -58,6 +58,6 @@ target/
 
 staticfiles/
 
-virt_bpadatatracker/
+virt_*/
 .version
 data/
