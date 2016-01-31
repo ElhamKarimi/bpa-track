@@ -1,4 +1,3 @@
-#!/bin/sh
 
 set -o nounset
 set -o errexit
@@ -140,8 +139,10 @@ _ci_ssh_agent() {
 _github_revision() {
   info 'git revision'
 
-  gittag=`git describe --abbrev=0 --tags 2> /dev/null`
-  gitbranch=`git rev-parse --abbrev-ref HEAD 2> /dev/null`
+  gittag=$(git describe --abbrev=0 --tags 2> /dev/null) 
+  gitbranch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+
+  info '$gittag'
 
   # only use tags when on master (release) branch
   if [ $gitbranch != "master" ]; then
@@ -157,7 +158,8 @@ _github_revision() {
 
   # create .version file for invalidating cache in Dockerfile
   # we hit remote as the Dockerfile clones remote
-  git ls-remote https://github.com/muccg/${PROJECT_NAME}.git ${gittag} > .version
+  # git ls-remote https://github.com/muccg/${PROJECT_NAME}.git ${gittag} > .version
+  git rev-parse --short HEAD > .version
 
   success "$(cat .version)"
   success "git tag: ${gittag}"
@@ -187,7 +189,10 @@ create_build_image() {
 
   set -x
   # don't try and pull the build image
-  ${CMD_ENV}; docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} --build-arg ARG_GIT_TAG=${gittag} -t muccg/${PROJECT_NAME}-build -f Dockerfile-build .
+  ( 
+    ${CMD_ENV}
+    docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} --build-arg ARG_GIT_TAG=${gittag} -t muccg/${PROJECT_NAME}-build -f Dockerfile-build .
+  )
   set +x
   success "$(docker images | grep muccg/${PROJECT_NAME}-build | sed 's/  */ /g')"
 }
@@ -196,7 +201,7 @@ create_build_image() {
 create_base_image() {
   info 'create base image'
   set -x
-  ${CMD_ENV}; docker build ${DOCKER_BUILD_OPTS} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .
+  ( ${CMD_ENV}; docker build ${DOCKER_BUILD_OPTS} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
   set +x
   success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
 }
@@ -232,24 +237,9 @@ start_dev() {
   mkdir -p data/dev
   chmod o+rwx data/dev
   set -x
-  ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} up
+  ( ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} up )
   set +x
 }
-
-
-# build RPMs
-rpm_build() {
-  info 'rpm build'
-  mkdir -p data/rpmbuild
-  chmod o+rwx data/rpmbuild
-  set -x
-  docker-compose ${DOCKER_COMPOSE_OPTIONS} --project-name ${PROJECT_NAME} -f docker-compose-rpmbuild.yml pull
-  ${CMD_ENV}; docker-compose ${DOCKER_COMPOSE_OPTIONS} --project-name ${PROJECT_NAME} -f docker-compose-rpmbuild.yml up
-  set +x
-  success "$(ls -lht data/rpmbuild/RPMS/x86_64/*shell* | head -1)"
-  success "$(ls -lht data/rpmbuild/RPMS/x86_64/*admin* | head -1)"
-}
-
 
 _ci_docker_login() {
   info 'Docker login'
@@ -352,15 +342,6 @@ run_unit_tests() {
 
   return $rval
 }
-
-
-# publish rpms to testing repo
-rpm_publish() {
-  info 'rpm publish'
-  time ccg publish_testing_rpm:data/rpmbuild/RPMS/x86_64/yabi*.rpm,release=6
-  success 'rpm publish'
-}
-
 
 _selenium_stack_up() {
   info 'selenium stack up'
@@ -505,9 +486,6 @@ case $ACTION in
     create_release_tarball
     create_release_image
     start_release
-    ;;
-  rpmbuild)
-    rpm_build
     ;;
   baseimage)
     create_base_image

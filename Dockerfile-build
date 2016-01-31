@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-FROM muccg/bpatrack
+FROM muccg/bpatrack-base
 MAINTAINER https://github.com/muccg/bpa-track/
 
 ARG ARG_GIT_TAG=next_release
@@ -26,9 +26,11 @@ RUN echo $GIT_TAG \
     && git clone --depth=1 --branch=$GIT_TAG https://github.com/muccg/bpa-track.git .
 
 RUN pip freeze
-RUN virtualenv /env
+RUN pyvenv /env
+RUN . /env/bin/activate
+RUN pip ${PIP_OPTS} install --upgrade pip
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/production.txt
-RUN pip ${PIP_OPTS} install -e bpatrack
+RUN pip ${PIP_OPTS} install -e .
 
 EXPOSE 9100 9101
 VOLUME ["/data"]

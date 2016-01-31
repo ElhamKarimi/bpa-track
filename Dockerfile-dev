@@ -15,7 +15,7 @@ WORKDIR /app
 COPY ./requirements /app/
 
 RUN pip freeze
-RUN pip ${PIP_OPTS} uninstall -y bpatrack
+RUN pip ${PIP_OPTS} uninstall -y .
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/test.txt
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/production.txt
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/local.txt
@@ -23,7 +23,7 @@ RUN pip ${PIP_OPTS} install --upgrade -r requirements/base.txt
 
 # Copy code and install the app
 COPY . /app
-RUN pip ${PIP_OPTS} install -e bpatrack
+RUN pip ${PIP_OPTS} install -e .
 
 EXPOSE 8000 9000 9001 9100 9101
 VOLUME ["/app", "/data"]

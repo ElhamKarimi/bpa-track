@@ -17,6 +17,7 @@ cache:
 
 runserver:
   build: .
+  dockerfile: Dockerfile-dev
   command: runserver
   environment:
     - DJANGO_SETTINGS_MODULE=config.settings.local
