@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from bpa_datatracker.users.models import User
-from bpa_datatracker.common.models import Facility
+from bpa_track.users.models import User
+from bpa_track.common.models import Facility
 
 
 class SampleReceived(models.Model):

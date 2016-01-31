@@ -12,7 +12,7 @@ def update_site_forward(apps, schema_editor):
         id=settings.SITE_ID,
         defaults={
             "domain": "ccgapps.com.au",
-            "name": "bpa_datatracker"
+            "name": "bpa_track"
         }
     )
 

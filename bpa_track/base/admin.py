@@ -3,11 +3,11 @@ from django.contrib import admin
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
-from bpa_datatracker.users.models import User
-from bpa_datatracker.users.admin import UserWidget
+from bpa_track.users.models import User
+from bpa_track.users.admin import UserWidget
 
-from bpa_datatracker.common.models import Facility
-from bpa_datatracker.common.admin import FacilityWidget
+from bpa_track.common.models import Facility
+from bpa_track.common.admin import FacilityWidget
 
 from .models import SampleReceived, Amplicon
 

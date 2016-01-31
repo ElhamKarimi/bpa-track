@@ -17,8 +17,8 @@ import os
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 
-from bpa_datatracker.common.models import Facility
-from bpa_datatracker.base.models import Amplicon
+from bpa_track.common.models import Facility
+from bpa_track.base.models import Amplicon
 
 METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpametadata')
 

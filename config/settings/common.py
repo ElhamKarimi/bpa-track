@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for bpa_datatracker project.
+Django settings for bpa_track project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -13,7 +13,7 @@ from __future__ import absolute_import, unicode_literals
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
-APPS_DIR = ROOT_DIR.path('bpa_datatracker')
+APPS_DIR = ROOT_DIR.path('bpa_track')
 
 env = environ.Env()
 
@@ -46,9 +46,9 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    'bpa_datatracker.users',  # custom users app
-    'bpa_datatracker.common', # common usefull things
-    'bpa_datatracker.base',
+    'bpa_track.users',  # custom users app
+    'bpa_track.common', # common usefull things
+    'bpa_track.base',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -69,7 +69,7 @@ MIDDLEWARE_CLASSES = (
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'bpa_datatracker.contrib.sites.migrations'
+    'sites': 'bpa_track.contrib.sites.migrations'
 }
 
 # DEBUG
@@ -103,7 +103,7 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'default': env.db("DATABASE_URL", default="postgres:///bpa_datatracker"),
+    'default': env.db("DATABASE_URL", default="postgres:///bpa_track"),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -213,8 +213,8 @@ AUTHENTICATION_BACKENDS = (
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_ADAPTER = 'bpa_datatracker.users.adapter.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'bpa_datatracker.users.adapter.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'bpa_track.users.adapter.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'bpa_track.users.adapter.SocialAccountAdapter'
 ACCOUNT_ALLOW_REGISTRATION = True
 
 # Custom user app defaults

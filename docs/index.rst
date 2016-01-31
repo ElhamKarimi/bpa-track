@@ -1,9 +1,9 @@
-.. bpa_datatracker documentation master file, created by
+.. bpa_track documentation master file, created by
    sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to bpa_datatracker's documentation!
+Welcome to bpa_track's documentation!
 ====================================================================
 
 Contents:
