@@ -199,7 +199,7 @@ create_build_image() {
 
   set -x
   # don't try and pull the build image
-  ( 
+  (
     ${CMD_ENV}
     docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} --build-arg ARG_GIT_TAG=${gittag} -t muccg/${PROJECT_NAME}-build -f Dockerfile-build .
   )
@@ -211,7 +211,10 @@ create_build_image() {
 create_base_image() {
   info 'create base image'
   set -x
-  ( ${CMD_ENV}; docker build ${DOCKER_BUILD_OPTS} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
+  (
+    ${CMD_ENV}
+    docker build ${DOCKER_BUILD_OPTS} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .
+  )
   set +x
   success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
 }
