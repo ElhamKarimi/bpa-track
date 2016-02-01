@@ -7,18 +7,20 @@ ARG PIP_OPTS="--no-cache-dir"
 ENV DEPLOYMENT dev
 ENV PRODUCTION 0
 ENV DEBUG 1
+ENV DJANGO_SETTINGS_MODULE config.settings.local
+ENV DATABASE_URL=postgres://webapp:webapp@db:5432/webapp
 
 USER root
 WORKDIR /app
 
 # install python deps
-COPY ./requirements /app/
+COPY ./requirements/* /app/requirements/
 
 RUN pip freeze
 RUN pip ${PIP_OPTS} uninstall -y .
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/test.txt
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/production.txt
-RUN pip ${PIP_OPTS} install --upgrade -r requirements/local.txt
+RUN pip ${PIP_OPTS} install --upgrade -r requirements/dev.txt
 RUN pip ${PIP_OPTS} install --upgrade -r requirements/base.txt
 
 # Copy code and install the app

@@ -140,7 +140,6 @@ then
     echo "UWSGI_OPTS is ${UWSGI_OPTS}"
 
     django-admin.py collectstatic --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-collectstatic.log
-    django-admin.py syncdb --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-syncdb.log
     django-admin.py migrate --noinput --settings=${DJANGO_SETTINGS_MODULE} 2>&1 | tee /data/uwsgi-migrate.log
     exec uwsgi --die-on-term --ini ${UWSGI_OPTS}
 fi
@@ -166,7 +165,7 @@ fi
 if [ "$COMMAND" = 'runtests' ] 
 then
     echo "Django test"
-    cd /app/datatracker
+    cd /app/
     exec django-admin.py test --traceback --settings=${DJANGO_SETTINGS_MODULE}
 fi
 

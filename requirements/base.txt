@@ -13,9 +13,6 @@ django-floppyforms==1.6.0
 # Models
 django-model-utils==2.3.1
 
-# Images
-# Pillow==3.0.0
-
 # For user registration, either via email or social
 django-allauth==0.24.1
 
@@ -29,10 +26,6 @@ django-autoslug==1.9.3
 # Time zones support
 pytz==2015.7
 
-# Redis support
-# django-redis==4.3.0
-# redis>=2.10.0
-
 django-suit==0.2.15
 # django-material
 python-dateutil
@@ -44,3 +37,4 @@ openpyxl
 xlrd
 unipath
 beautifulsoup4
+uwsgi==2.0.12

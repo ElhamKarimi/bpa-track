@@ -56,7 +56,7 @@ usage() {
     usage          Print this usage
     help           Print this usage
 
-  Examples:
+
     ${PROGNAME} dev_rebuild
     ${PROGNAME} dev
 EOF
@@ -99,6 +99,16 @@ _docker_options() {
 
   DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS} ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL}"
   DOCKER_COMPOSE_BUILD_OPTS="${DOCKER_COMPOSE_BUILD_OPTS} ${DOCKER_COMPOSE_BUILD_NOCACHE} ${DOCKER_COMPOSE_BUILD_PULL}"
+}
+
+_display_env() {
+    info "Environment set as:"
+    info "DOCKER_PULL        ${DOCKER_PULL}"
+    info "DOCKER_NO_CACHE    ${DOCKER_NO_CACHE}"
+    info "DOCKER_BUILD_PROXY ${DOCKER_BUILD_PROXY}"
+    info "DOCKER_USE_HUB     ${DOCKER_USE_HUB}"
+    info "DOCKER_IMAGE       ${DOCKER_IMAGE}"
+    info "SET_HTTP_PROXY     ${SET_HTTP_PROXY}"
 }
 
 
@@ -454,6 +464,8 @@ else
 fi
 
 _docker_options
+_display_env
+
 
 case $ACTION in
   pythonlint)
