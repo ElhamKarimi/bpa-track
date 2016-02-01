@@ -513,18 +513,29 @@ case $ACTION in
     _ci_ssh_agent
     ci_docker_staging
     ;;
-  ci_rpm_staging)
-    _ci_ssh_agent
-    ci_rpm_staging
-    ;;
   docker_staging_lettuce)
     docker_staging_lettuce
     ;;
-  docker_rpm_staging_lettuce)
-    docker_rpm_staging_lettuce
-    ;;
   lettuce)
     lettuce
+    ;;
+  shell)
+    docker exec -it ${PROJECT_NAME}_web_1 /bin/bash
+    ;;
+  admin)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh admin $2
+    ;;
+  superuser)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh superuser
+    ;;
+  runscript)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh runscript $2
+    ;;
+  nuclear)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh nuclear
+    ;;
+  checksecure)
+    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh checksecure
     ;;
   help)
     usage 
