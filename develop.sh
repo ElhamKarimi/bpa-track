@@ -289,7 +289,10 @@ _docker_release_build() {
     info "Building ${PROJECT_NAME} ${tag}"
     set -x
     # don't try and pull the base image
-    ${CMD_ENV}; docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f ${dockerfile} .
+    (
+      ${CMD_ENV}
+      docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f ${dockerfile} .
+    )
     success "built ${tag}"
 
     if [ ${DOCKER_USE_HUB} = "1" ]; then
@@ -535,22 +538,22 @@ case $ACTION in
     lettuce
     ;;
   shell)
-    docker exec -it ${PROJECT_NAME}_web_1 /bin/bash
+    docker exec -it ${PROJECT_NAME}_runserver_1 /bin/bash
     ;;
   admin)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh admin $2
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin $2
     ;;
   superuser)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh superuser
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh superuser
     ;;
   runscript)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh runscript $2
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh runscript $2
     ;;
   nuclear)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh nuclear
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh nuclear
     ;;
   checksecure)
-    docker exec -it ${PROJECT_NAME}_web_1 /app/docker-entrypoint.sh checksecure
+    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh checksecure
     ;;
   help)
     usage 
