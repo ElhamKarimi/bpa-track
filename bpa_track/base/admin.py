@@ -9,7 +9,7 @@ from bpa_track.users.admin import UserWidget
 from bpa_track.common.models import Facility
 from bpa_track.common.admin import FacilityWidget
 
-from .models import SampleReceived, Amplicon
+from .models import SampleReceived, Amplicon, Metagenomic
 
 class DateField(fields.Field):
     """
@@ -70,7 +70,7 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
 class AmpliconResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
     target = fields.Field(attribute='target', column_name='Target')
-    comments = fields.Field(attribute='target', column_name='Target')
+    comments = fields.Field(attribute='comments', column_name='Comments')
     facility = fields.Field(
             attribute='facility',
             column_name='Facility',
@@ -91,4 +91,28 @@ class AmpliconAdmin(ImportExportModelAdmin):
     resource_class = AmpliconResource
     list_display = ('extraction_id', 'facility', 'target', 'comments')
     search_fields = ('extraction_id', 'facility__name', 'target', 'comments')
+
+
+class MetagenomicResource(resources.ModelResource):
+    extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
+    facility = fields.Field(
+            attribute='facility',
+            column_name='Facility',
+            widget=FacilityWidget()
+            )
+    comments = fields.Field(attribute='comments', column_name='Comments')
+
+    class Meta:
+        model = Amplicon
+        import_id_fields = ('extraction_id', )
+        export_order = (
+                'extraction_id',
+                'facility',
+                'comments')
+
+@admin.register(Metagenomic)
+class AmpliconAdmin(ImportExportModelAdmin):
+    resource_class = MetagenomicResource
+    list_display = ('extraction_id', 'facility', 'comments')
+    search_fields = ('extraction_id', 'facility__name', 'comments')
 
