@@ -25,6 +25,7 @@ METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpametadata')
 METADATA_URL = "https://downloads.bioplatforms.com/base/tracking/amplicons/"
 DATA_DIR = Path(METADATA_ROOT, "base/amplicon_metadata/")
 
+logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Ingest BASE Amplicons'
@@ -48,11 +49,25 @@ class Command(BaseCommand):
 
         return wrapper.get_all()
 
+    def _get_facility_name_from_filename(self, filename):
+        """ If facility is not noted in spreadsheed, get it from the filename """
+
+        if filename is None:
+            logger.warn("Filename not set")
+            return "UNKNOWN"
+
+        parts = filename.split('_')
+        if len(parts) >= 2:
+            return parts[2] # the vendor should be at [2] BASE_ITS_UNSW_AGEFG_metadata.xlsx
+        else:
+            logger.warn("Filename mallformed")
+            return "UNKNOWN"
+
 
     def _get_facility(self, entry):
         name = entry.sequencing_facility
         if name is None:
-            name = "UNKNOWN"
+            name = self._get_facility_name_from_filename(entry.file_name)
 
         name = name.strip()
         if name == "":
