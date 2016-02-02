@@ -9,7 +9,7 @@ from bpa_track.users.admin import UserWidget
 from bpa_track.common.models import Facility
 from bpa_track.common.admin import FacilityWidget
 
-from .models import SampleReceived, Amplicon, Metagenomic
+from .models import SampleReceived, Amplicon, Metagenomic, TransferLog
 
 class DateField(fields.Field):
     """
@@ -28,6 +28,7 @@ class DateField(fields.Field):
 class SampleReceivedResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
     batch_number = fields.Field(attribute='batch_number', column_name='Batch number')
+    metadata_filename = fields.Field('metadata_filename', column_name='Metadata Filename')
     date_received = DateField(attribute='date_received', column_name='Date received')
 
     submitter = fields.Field(
@@ -50,7 +51,9 @@ class SampleReceivedResource(resources.ModelResource):
                 'facility',
                 'batch_number',
                 'date_received',
-                'submitter')
+                'submitter',
+                'metadata_filename',
+                )
 
 @admin.register(SampleReceived)
 class SampleReceivedAdmin(ImportExportModelAdmin):
@@ -60,7 +63,8 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             'facility',
             'batch_number',
             'date_received',
-            'submitter')
+            'submitter',
+            )
 
     date_hierarchy = 'date_received'
     search_fields = ('extraction_id', 'facility__name', 'submitter__name', 'date_received', 'batch_number')
@@ -71,6 +75,7 @@ class AmpliconResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
     target = fields.Field(attribute='target', column_name='Target')
     comments = fields.Field(attribute='comments', column_name='Comments')
+    metadata_filename = fields.Field('metadata_filename', column_name='Metadata Filename')
     facility = fields.Field(
             attribute='facility',
             column_name='Facility',
@@ -84,12 +89,13 @@ class AmpliconResource(resources.ModelResource):
                 'extraction_id',
                 'target',
                 'facility',
+                'metadata_filename',
                 'comments')
 
 @admin.register(Amplicon)
 class AmpliconAdmin(ImportExportModelAdmin):
     resource_class = AmpliconResource
-    list_display = ('extraction_id', 'facility', 'target', 'comments')
+    list_display = ('extraction_id', 'facility', 'target', 'metadata_filename', 'comments')
     search_fields = ('extraction_id', 'facility__name', 'target', 'comments')
 
 
@@ -108,11 +114,64 @@ class MetagenomicResource(resources.ModelResource):
         export_order = (
                 'extraction_id',
                 'facility',
+                'metadata_filename',
                 'comments')
 
 @admin.register(Metagenomic)
 class AmpliconAdmin(ImportExportModelAdmin):
     resource_class = MetagenomicResource
-    list_display = ('extraction_id', 'facility', 'comments')
+    list_display = ('extraction_id', 'facility', 'metadata_filename', 'comments')
     search_fields = ('extraction_id', 'facility__name', 'comments')
 
+
+class TransferLogResource(resources.ModelResource):
+    facility = fields.Field(
+            attribute='facility',
+            column_name='Sequencing facility',
+            widget=FacilityWidget()
+            )
+    transfer_to_facility_date = DateField(
+            attribute='transfer_to_facility_date',
+            column_name='Date of transfer')
+    description = fields.Field(attribute='description', column_name='Description')
+    data_type = fields.Field(attribute='data_type', column_name='Data type')
+    folder_name = fields.Field(attribute='folder_name', column_name='Folder name')
+    transfer_to_archive_date = DateField(
+            attribute='transfer_to_archive_date',
+            column_name='Date of transfer to archive')
+    notes = fields.Field(attribute='notes', column_name='Notes')
+    ticket_url = fields.Field(attribute='ticket_url', column_name='CCG JIRA Ticket')
+    downloads_url = fields.Field(attribute='downloads_url', column_name='Download')
+
+    class Meta:
+        model = TransferLog
+        import_id_fields = ('folder_name', )
+
+@admin.register(TransferLog)
+class AmpliconAdmin(ImportExportModelAdmin):
+    resource_class = TransferLogResource
+    date_hierarchy = 'transfer_to_archive_date'
+
+    list_display = (
+            'facility',
+            'transfer_to_facility_date',
+            'description',
+            'data_type',
+            'folder_name',
+            'transfer_to_archive_date',
+            'notes',
+            'ticket_url',
+            'downloads_url'
+            )
+
+    search_fields = (
+            'facility__name',
+            'transfer_to_facility_date',
+            'description',
+            'data_type',
+            'folder_name',
+            'transfer_to_archive_date',
+            'notes',
+            'ticket_url',
+            'downloads_url'
+            )

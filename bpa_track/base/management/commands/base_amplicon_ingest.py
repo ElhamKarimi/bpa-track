@@ -37,6 +37,7 @@ class Command(BaseCommand):
                 ("sample_extraction_id", "Sample extraction ID", None),
                 ("sequencing_facility", "Sequencing facility", None),
                 ("target", "Target", lambda s: s.upper().strip()),
+                ("comments", "Comments", None),
                 ]
 
         wrapper = ExcelWrapper(field_spec,
@@ -80,12 +81,12 @@ class Command(BaseCommand):
         """ Add sequence files """
 
         for entry in data:
-            comment = "Amplicon sequence noted in {}".format(entry.file_name)
             amplicon, _ = Amplicon.objects.get_or_create(
                     extraction_id=entry.sample_extraction_id,
                     facility=self._get_facility(entry),
                     target=entry.target,
-                    comments=comment
+                    metadata_filename=entry.file_name,
+                    comments=entry.comments
                     )
 
     def _do_metadata(self):
