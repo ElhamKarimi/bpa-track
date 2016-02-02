@@ -80,7 +80,7 @@ class Metagenomic(models.Model):
     comments = models.TextField('Comments', blank=True, null=True)
 
     def __str__(self):
-        return u'{0}:{1}:{2}'.format(self.extraction_id, self.facility)
+        return u'{0}:{1}'.format(self.extraction_id, self.facility)
 
     class Meta:
         verbose_name_plural = 'Metagenomic Sequences'
