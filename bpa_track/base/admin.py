@@ -164,6 +164,13 @@ class AmpliconAdmin(ImportExportModelAdmin):
             'downloads_url'
             )
 
+    list_filter = (
+            'facility',
+            'transfer_to_facility_date',
+            'transfer_to_archive_date',
+            'data_type',
+            )
+
     search_fields = (
             'facility__name',
             'transfer_to_facility_date',
