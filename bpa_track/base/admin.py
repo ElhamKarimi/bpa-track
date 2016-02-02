@@ -96,6 +96,7 @@ class AmpliconResource(resources.ModelResource):
 class AmpliconAdmin(ImportExportModelAdmin):
     resource_class = AmpliconResource
     list_display = ('extraction_id', 'facility', 'target', 'metadata_filename', 'comments')
+    list_filter = ('facility', 'target', )
     search_fields = ('extraction_id', 'facility__name', 'target', 'comments')
 
 
@@ -118,9 +119,10 @@ class MetagenomicResource(resources.ModelResource):
                 'comments')
 
 @admin.register(Metagenomic)
-class AmpliconAdmin(ImportExportModelAdmin):
+class MetagenomicAdmin(ImportExportModelAdmin):
     resource_class = MetagenomicResource
     list_display = ('extraction_id', 'facility', 'metadata_filename', 'comments')
+    list_filter = ('facility',)
     search_fields = ('extraction_id', 'facility__name', 'comments')
 
 
