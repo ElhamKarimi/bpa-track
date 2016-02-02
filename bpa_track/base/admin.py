@@ -63,10 +63,32 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             'submitter')
 
     date_hierarchy = 'date_received'
+    search_fields = ('extraction_id', 'facility__name', 'submitter__name', 'date_received', 'batch_number')
+
+
+
+class AmpliconResource(resources.ModelResource):
+    extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
+    target = fields.Field(attribute='target', column_name='Target')
+    comments = fields.Field(attribute='target', column_name='Target')
+    facility = fields.Field(
+            attribute='facility',
+            column_name='Facility',
+            widget=FacilityWidget()
+            )
+
+    class Meta:
+        model = Amplicon
+        import_id_fields = ('extraction_id', )
+        export_order = (
+                'extraction_id',
+                'target',
+                'facility',
+                'comments')
 
 @admin.register(Amplicon)
-class AmpliconAdmin(admin.ModelAdmin):
-    model = Amplicon
-    list_display = ('sample_extraction_id', 'sequencing_facility', 'target', 'comments')
-    search_fields = ('sample_extraction_id', 'sequencing_facility__name', 'target', 'comments')
+class AmpliconAdmin(ImportExportModelAdmin):
+    resource_class = AmpliconResource
+    list_display = ('extraction_id', 'facility', 'target', 'comments')
+    search_fields = ('extraction_id', 'facility__name', 'target', 'comments')
 
