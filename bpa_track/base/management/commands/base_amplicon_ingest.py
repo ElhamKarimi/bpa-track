@@ -82,8 +82,8 @@ class Command(BaseCommand):
         for entry in data:
             comment = "Amplicon sequence noted in {}".format(entry.file_name)
             amplicon, _ = Amplicon.objects.get_or_create(
-                    sample_extraction_id=entry.sample_extraction_id,
-                    sequencing_facility=self._get_facility(entry),
+                    extraction_id=entry.sample_extraction_id,
+                    facility=self._get_facility(entry),
                     target=entry.target,
                     comments=comment
                     )

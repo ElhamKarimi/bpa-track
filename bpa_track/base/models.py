@@ -36,17 +36,17 @@ class Amplicon(models.Model):
             ('A16S', 'A16S')
             )
 
-    sample_extraction_id = models.CharField(
+    extraction_id = models.CharField(
             'Sample Extraction ID',
             max_length=100,
             blank=True,
             null=True)
 
-    sequencing_facility = models.ForeignKey(Facility,
-                                            verbose_name='Sequencing Facility',
-                                            related_name='facility',
-                                            blank=True,
-                                            null=True)
+    facility = models.ForeignKey(
+            Facility,
+            verbose_name='Sequencing Facility',
+            blank=True,
+            null=True)
 
     target = models.CharField(
             'Type',
@@ -56,7 +56,7 @@ class Amplicon(models.Model):
     comments = models.TextField('Comments', blank=True, null=True)
 
     def __str__(self):
-        return u'{0}:{1}:{2}'.format(self.sample_extraction_id, self.sequencing_facility, self.target)
+        return u'{0}:{1}:{2}'.format(self.extraction_id, self.facility, self.target)
 
     class Meta:
         verbose_name_plural = 'Amplicon Sequences'
