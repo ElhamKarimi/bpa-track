@@ -80,7 +80,7 @@ class Command(BaseCommand):
 
         for entry in data:
             comment = "Amplicon sequence noted in {}".format(entry.file_name)
-            amplicon, _ = Amplicon.objects.get_or_create(
+            amplicon, _ = Metagenomic.objects.get_or_create(
                     extraction_id=entry.sample_extraction_id,
                     facility=self._get_facility(entry),
                     comments=comment
