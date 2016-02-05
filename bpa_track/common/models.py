@@ -11,7 +11,7 @@ class Facility(models.Model):
         verbose_name_plural = 'Facilities'
 
     def __str__(self):
-        return u'{0}'.format(self.name)
+        return '{0}'.format(self.name)
 
 
 class TransferLog(models.Model):

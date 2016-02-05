@@ -1,3 +1,5 @@
+
+from dateutil.parser import parse as date_parser
 from django.contrib import admin
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
@@ -40,8 +42,8 @@ class DateField(fields.Field):
         return date_parser(data[self.column_name])
 
 
-
-class AmpliconResource(resources.ModelResource):
+# Amplicon
+class CommonAmpliconResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
     target = fields.Field(attribute='target', column_name='Target')
     comments = fields.Field(attribute='comments', column_name='Comments')
@@ -53,7 +55,7 @@ class AmpliconResource(resources.ModelResource):
             )
 
     class Meta:
-        model = Amplicon
+        abstract = True
         import_id_fields = ('extraction_id', )
         export_order = (
                 'extraction_id',
@@ -62,14 +64,14 @@ class AmpliconResource(resources.ModelResource):
                 'metadata_filename',
                 'comments')
 
-class AmpliconAdmin(ImportExportModelAdmin):
-    resource_class = AmpliconResource
+class CommonAmpliconAdmin(ImportExportModelAdmin):
     list_display = ('extraction_id', 'facility', 'target', 'metadata_filename', 'comments')
     list_filter = ('facility', 'target', )
     search_fields = ('extraction_id', 'facility__name', 'target', 'comments')
 
 
-class MetagenomicResource(resources.ModelResource):
+# Metagenomics
+class CommonMetagenomicResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
     facility = fields.Field(
             attribute='facility',
@@ -79,7 +81,7 @@ class MetagenomicResource(resources.ModelResource):
     comments = fields.Field(attribute='comments', column_name='Comments')
 
     class Meta:
-        model = Amplicon
+        abstract = True
         import_id_fields = ('extraction_id', )
         export_order = (
                 'extraction_id',
@@ -87,14 +89,14 @@ class MetagenomicResource(resources.ModelResource):
                 'metadata_filename',
                 'comments')
 
-class MetagenomicAdmin(ImportExportModelAdmin):
-    resource_class = MetagenomicResource
+class CommonMetagenomicAdmin(ImportExportModelAdmin):
     list_display = ('extraction_id', 'facility', 'metadata_filename', 'comments')
     list_filter = ('facility',)
     search_fields = ('extraction_id', 'facility__name', 'comments')
 
 
-class TransferLogResource(resources.ModelResource):
+# TransferLog
+class CommonTransferLogResource(resources.ModelResource):
     facility = fields.Field(
             attribute='facility',
             column_name='Sequencing facility',
@@ -114,11 +116,10 @@ class TransferLogResource(resources.ModelResource):
     downloads_url = fields.Field(attribute='downloads_url', column_name='Download')
 
     class Meta:
-        model = TransferLog
+        abstract = True
         import_id_fields = ('folder_name', )
 
-class TransferLogAdmin(ImportExportModelAdmin):
-    resource_class = TransferLogResource
+class CommonTransferLogAdmin(ImportExportModelAdmin):
     date_hierarchy = 'transfer_to_archive_date'
 
     list_display = (

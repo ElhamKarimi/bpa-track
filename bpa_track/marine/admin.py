@@ -10,9 +10,12 @@ from bpa_track.common.models import Facility
 from bpa_track.common.admin import (
         FacilityWidget,
         DateField,
-        AmpliconAdmin,
-        MetagenomicAdmin,
-        TransferLogAdmin,
+        CommonAmpliconResource,
+        CommonAmpliconAdmin,
+        CommonMetagenomicResource,
+        CommonMetagenomicAdmin,
+        CommonTransferLogResource,
+        CommonTransferLogAdmin,
         )
 
 from .models import (
@@ -20,6 +23,31 @@ from .models import (
         Metagenomic,
         TransferLog
         )
+
+
+# TransferLog
+class TransferLogResource(CommonTransferLogResource):
+    class Meta(CommonTransferLogResource.Meta):
+        model = TransferLog
+
+class TransferLogAdmin(CommonTransferLogAdmin):
+    resource_class = TransferLogResource
+
+# Amplicon
+class AmpliconResource(CommonAmpliconResource):
+    class Meta(CommonAmpliconResource.Meta):
+        model = Amplicon
+
+class AmpliconAdmin(CommonAmpliconAdmin):
+    resource_class = AmpliconResource
+
+# Metagenomic
+class MetagenomicResource(CommonMetagenomicResource):
+    class Meta(CommonMetagenomicResource.Meta):
+        model = Metagenomic
+
+class MetagenomicAdmin(CommonMetagenomicAdmin):
+    resource_class = MetagenomicResource
 
 admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
