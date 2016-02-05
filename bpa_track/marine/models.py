@@ -14,6 +14,5 @@ class TransferLog(TransferLog):
 class Metagenomic(Metagenomic):
     pass
 
-class Amplicon(Amplicon)
+class Amplicon(Amplicon):
     pass
-

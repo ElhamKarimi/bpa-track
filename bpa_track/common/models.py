@@ -19,6 +19,7 @@ class TransferLog(models.Model):
 
     facility = models.ForeignKey(
             Facility,
+            related_name='%(app_label)s_%(class)s_facility',
             verbose_name='Sequencing Facility',
             blank=True,
             null=True)
@@ -59,6 +60,7 @@ class Amplicon(models.Model):
 
     facility = models.ForeignKey(
             Facility,
+            related_name='%(app_label)s_%(class)s_facility',
             verbose_name='Sequencing Facility',
             blank=True,
             null=True)
@@ -91,6 +93,7 @@ class Metagenomic(models.Model):
 
     facility = models.ForeignKey(
             Facility,
+            related_name='%(app_label)s_%(class)s_facility',
             verbose_name='Sequencing Facility',
             blank=True,
             null=True)

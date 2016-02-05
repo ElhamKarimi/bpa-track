@@ -49,6 +49,7 @@ LOCAL_APPS = (
     'bpa_track.users',  # custom users app
     'bpa_track.common', # common usefull things
     'bpa_track.base',
+    'bpa_track.marine',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

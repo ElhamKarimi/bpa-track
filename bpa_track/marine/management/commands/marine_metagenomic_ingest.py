@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Ingests BASE Amplicon metadata from server into database.
+Ingests Marine Microbe Metagenomic metadata from server into database.
 """
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from ...models import Amplicon
+from ...models import Metagenomic
 
 from django.db.utils import DataError
 from unipath import Path
@@ -22,13 +22,13 @@ from bpa_track.base.models import Amplicon
 
 METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpametadata')
 
-METADATA_URL = "https://downloads.bioplatforms.com/base/tracking/amplicons/"
-DATA_DIR = Path(METADATA_ROOT, "base/amplicon_metadata/")
+METADATA_URL = "https://downloads.bioplatforms.com/marine_microbes/tracking/metagenomics/"
+DATA_DIR = Path(METADATA_ROOT, "marine_microbes/metagenomic_metadata/")
 
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Ingest BASE Amplicons'
+    help = 'Ingest Marine Microbes Metagenomics'
 
     def _get_data(self, file_name):
         """ The data sets is relatively small, so make a in-memory copy to simplify some operations. """
@@ -36,8 +36,6 @@ class Command(BaseCommand):
         field_spec = [
                 ("sample_extraction_id", "Sample extraction ID", None),
                 ("sequencing_facility", "Sequencing facility", None),
-                ("target", "Target", lambda s: s.upper().strip()),
-                ("comments", "Comments", None),
                 ]
 
         wrapper = ExcelWrapper(field_spec,
@@ -51,7 +49,7 @@ class Command(BaseCommand):
         return wrapper.get_all()
 
     def _get_facility_name_from_filename(self, filename):
-        """ If facility is not noted in spreadsheed, get it from the filename """
+        """ If facility is not noted in spreadsheet, get it from the filename """
 
         if filename is None:
             logger.warn("Filename not set")
@@ -59,7 +57,7 @@ class Command(BaseCommand):
 
         parts = filename.split('_')
         if len(parts) >= 2:
-            return parts[2] # the vendor should be at [2] BASE_ITS_UNSW_AGEFG_metadata.xlsx
+            return parts[2] # the vendor should be at [2] Marine Microbes_metagenomics_AGRF_H32M7BCXX_metadata.xlsx
         else:
             logger.warn("Filename mallformed")
             return "UNKNOWN"
@@ -81,12 +79,10 @@ class Command(BaseCommand):
         """ Add sequence files """
 
         for entry in data:
-            amplicon, _ = Amplicon.objects.get_or_create(
+            amplicon, _ = Metagenomic.objects.get_or_create(
                     extraction_id=entry.sample_extraction_id,
                     facility=self._get_facility(entry),
-                    target=entry.target,
-                    metadata_filename=entry.file_name,
-                    comments=entry.comments
+                    metadata_filename=entry.file_name
                     )
 
     def _do_metadata(self):
@@ -94,15 +90,15 @@ class Command(BaseCommand):
             if path.isfile() and path.ext == ".xlsx":
                 return True
 
-        self.stdout.write(self.style.SUCCESS("Ingesting BASE Amplicon metadata from {0}".format(DATA_DIR)))
+        self.stdout.write(self.style.SUCCESS("Ingesting Marine Microbes Amplicon metadata from {0}".format(DATA_DIR)))
         for metadata_file in DATA_DIR.walk(filter=is_metadata):
-            self.stdout.write(self.style.SUCCESS("Processing BASE Amplicon Metadata file {0}".format(metadata_file)))
+            self.stdout.write(self.style.SUCCESS("Processing Marine Microbes Amplicon Metadata file {0}".format(metadata_file)))
             samples = list(self._get_data(metadata_file))
             self._add_samples(samples)
 
 
     def handle(self, *args, **options):
-        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("base", "b4s3"))
+        fetcher = Fetcher(DATA_DIR, METADATA_URL)
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 
