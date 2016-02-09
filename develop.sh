@@ -56,7 +56,6 @@ usage() {
     rm             Remove all containers
     pythonlint     Run python lint
     unit_tests     Run unit tests
-    selenium       Run selenium tests
     usage          Print this usage
     help           Print this usage
 
@@ -160,24 +159,6 @@ _pip_proxy() {
 
     success "Pip index url ${PIP_INDEX_URL}"
 }
-
-# ssh setup for ci
-_ci_ssh_agent() {
-  info 'ci ssh config'
-
-  # if no _ci_ssh_agent then bomb
-  if [ -z ${_ci_ssh_agent+x} ]; then
-    fail '_ci_ssh_agent not set'
-    exit 1
-  fi
-
-  ssh-agent > /tmp/agent.env.sh
-  . /tmp/agent.env.sh
-  ssh-add ${CI_SSH_KEY}
-
-  success 'activated ssh agent'
-}
-
 
 # figure out what branch/tag we are on, write out .version file
 _github_revision() {
@@ -285,6 +266,13 @@ start_dev() {
   set +x
 }
 
+rm_images() {
+  info 'rm images'
+  set -x
+  ( ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} rm )
+  set +x
+}
+
 _ci_docker_login() {
   info 'Docker login'
 
@@ -330,7 +318,6 @@ _docker_release_build() {
       docker push ${tag}
       success "pushed ${tag}"
     fi
-    set +x
   done
 
   rm -f .version || true
@@ -349,125 +336,12 @@ ci_dockerbuild() {
   success 'ci docker build'
 }
 
-
-_test_stack_up() {
-  info 'test stack up'
-  mkdir -p data/tests
-  chmod o+rwx data/tests
-
-  set -x
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-teststack.yml rm --force
-  ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} -f docker-compose-teststack.yml build 
-  success 'test stack built'
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-teststack.yml up -d
-  set +x
-  success 'test stack up'
-}
-
-
-_test_stack_down() {
-  info 'test stack down'
-  set -x
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-teststack.yml stop
-  set +x
-  success 'test stack down'
-}
-
-
-run_unit_tests() {
-  info 'run unit tests'
-  _test_stack_up
-
-  set +e
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-unittests.yml rm --force
-  ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} -f docker-compose-unittests.yml build
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-unittests.yml up
-  rval=$?
-  set -e
-
-  _test_stack_down
-
-  return $rval
-}
-
-_selenium_stack_up() {
-  info 'selenium stack up'
-  mkdir -p data/selenium
-  chmod o+rwx data/selenium
-
-  set -x
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-selenium.yml up -d
-  set +x
-  success 'selenium stack up'
-}
-
-
-_selenium_stack_down() {
-  info 'selenium stack down'
-  set -x
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-selenium.yml stop
-  set +x
-  success 'selenium stack down'
-}
-
-
-lettuce() {
-  info 'lettuce'
-  _selenium_stack_up
-  _test_stack_up
-
-  set -x
-  set +e
-  ( docker-compose --project-name ${PROJECT_NAME} -f docker-compose-lettuce.yml rm --force || exit 0 )
-  ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} -f docker-compose-lettuce.yml build
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-lettuce.yml up
-  rval=$?
-  set -e
-  set +x
-
-  _test_stack_down
-  _selenium_stack_down
-
-  exit $rval
-}
-
-
-docker_staging_lettuce() {
-  _selenium_stack_up
-
-  set -x
-  set +e
-  ( docker-compose --project-name ${PROJECT_NAME} -f docker-compose-staging-lettuce.yml rm --force || exit 0 )
-  ${CMD_ENV}; docker-compose --project-name ${PROJECT_NAME} -f docker-compose-staging-lettuce.yml build
-  docker-compose --project-name ${PROJECT_NAME} -f docker-compose-staging-lettuce.yml up
-  rval=$?
-  set -e
-  set +x
-
-  _selenium_stack_down
-
-  exit $rval
-}
-
 # lint using flake8
 python_lint() {
   info "python lint"
   pip install 'flake8>=2.0,<2.1'
-  flake8 yabi/yabi yabish/yabishell --count
+  flake8 bpa_track --count
   success "python lint"
-}
-
-
-# lint js, assumes closure compiler
-js_lint() {
-  info "js lint"
-  pip install 'closure-linter==2.3.13'
-  JSFILES="yabi/yabi/yabifeapp/static/javascript/*.js yabi/yabi/yabifeapp/static/javascript/account/*.js"
-  for JS in $JSFILES
-  do
-    gjslint --disable 0131 --max_line_length 100 --nojsdoc $JS
-  done
-  success "js lint"
 }
 
 
@@ -506,6 +380,9 @@ case $ACTION in
     ;;
   dev)
     start_dev
+    ;;
+  rm)
+    rm_images 
     ;;
   dev_rebuild)
     create_base_image
