@@ -46,7 +46,7 @@ usage() {
     baseimage      Build base image
     buildimage     Build build image
     devimage       Build dev image
-    releaseimage   Build base image
+    releaseimage   Build release image
     releasetarball Produce release tarball artifact
     shell          Create and shell into a new web image, used for db checking with Django env available
     superuser      Create Django superuser
@@ -233,15 +233,18 @@ create_base_image() {
 }
 
 create_release_tarball() {
-  info 'create release tarball'
-  mkdir -p build
-  chmod o+rwx build
+    info 'create release tarball'
+    mkdir -p build
+    chmod o+rwx build
 
-  set -x
-  local volume=$(readlink -f ./build/)
-  docker run --rm -v ${volume}:/data muccg/${PROJECT_NAME}-build tarball
-  set +x
-  success "$(ls -lh build/*)"
+    set -x
+    local volume=$(readlink -f ./build/)
+    (
+    ${CMD_ENV}
+    docker run ${DOCKER_RUN_OPTS} --rm -v ${volume}:/data muccg/${PROJECT_NAME}-build tarball
+    )
+    set +x
+    success "$(ls -lh build/*)"
 }
 
 
