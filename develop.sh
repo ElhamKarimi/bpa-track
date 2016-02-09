@@ -14,12 +14,15 @@ readonly VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
 : ${DOCKER_USE_HUB:="0"}
 : ${DOCKER_IMAGE:="muccg/${PROJECT_NAME}"}
 : ${SET_HTTP_PROXY:="1"}
+: ${SET_PIP_PROXY:="1"}
 : ${DOCKER_NO_CACHE:="0"}
 : ${DOCKER_PULL:="1"}
 
 # Do not set these, they are vars used below
 CMD_ENV=''
 DOCKER_BUILD_OPTS=''
+DOCKER_ROUTE=''
+DOCKER_RUN_OPTS='-e PIP_INDEX_URL -e PIP_TRUSTED_HOST'
 DOCKER_COMPOSE_BUILD_OPTS=''
 
 usage() {
@@ -33,6 +36,7 @@ usage() {
     Push/pull from docker hub  DOCKER_USE_HUB              ${DOCKER_USE_HUB}
     Release docker image       DOCKER_IMAGE                ${DOCKER_IMAGE}
     Use a http proxy           SET_HTTP_PROXY              ${SET_HTTP_PROXY}
+    Use a pip proxy            SET_PIP_PROXY               ${SET_PIP_PROXY}
 
   Usage: ${PROGNAME} options
 
@@ -57,6 +61,8 @@ usage() {
     help           Print this usage
 
 
+    Example, start dev with no proxy and rebuild everything:
+    SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ${PROGNAME} dev_rebuild
     ${PROGNAME} dev_rebuild
     ${PROGNAME} dev
 EOF
@@ -81,6 +87,12 @@ fail () {
 
 
 _docker_options() {
+  DOCKER_ROUTE=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
+  success "Docker ip ${DOCKER_ROUTE}"
+
+  _http_proxy
+  _pip_proxy
+
   if [ ${DOCKER_PULL} = "1" ]; then
     DOCKER_BUILD_PULL="--pull=true"
     DOCKER_COMPOSE_BUILD_PULL="--pull"
@@ -97,18 +109,24 @@ _docker_options() {
     DOCKER_COMPOSE_BUILD_NOCACHE=""
   fi
 
-  DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS} ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL}"
+  DOCKER_BUILD_OPTS="${DOCKER_BUILD_OPTS} ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} ${DOCKER_BUILD_PIP_PROXY}"
+
+  # compose does not expose all docker functionality, so we can't use compose to build in all cases
   DOCKER_COMPOSE_BUILD_OPTS="${DOCKER_COMPOSE_BUILD_OPTS} ${DOCKER_COMPOSE_BUILD_NOCACHE} ${DOCKER_COMPOSE_BUILD_PULL}"
+
+  # environemnt used by subshells
+  CMD_ENV="export ${CMD_ENV}"
 }
 
+
 _display_env() {
-    info "Environment set as:"
-    info "DOCKER_PULL        ${DOCKER_PULL}"
-    info "DOCKER_NO_CACHE    ${DOCKER_NO_CACHE}"
-    info "DOCKER_BUILD_PROXY ${DOCKER_BUILD_PROXY}"
-    info "DOCKER_USE_HUB     ${DOCKER_USE_HUB}"
-    info "DOCKER_IMAGE       ${DOCKER_IMAGE}"
-    info "SET_HTTP_PROXY     ${SET_HTTP_PROXY}"
+  info "Environment set as:"
+  info "DOCKER_PULL        ${DOCKER_PULL}"
+  info "DOCKER_NO_CACHE    ${DOCKER_NO_CACHE}"
+  info "DOCKER_BUILD_PROXY ${DOCKER_BUILD_PROXY}"
+  info "DOCKER_USE_HUB     ${DOCKER_USE_HUB}"
+  info "DOCKER_IMAGE       ${DOCKER_IMAGE}"
+  info "SET_HTTP_PROXY     ${SET_HTTP_PROXY}"
 }
 
 
@@ -116,16 +134,32 @@ _http_proxy() {
   info 'http proxy'
 
   if [ ${SET_HTTP_PROXY} = "1" ]; then
-    local docker_route=$(ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+')
-    success "Docker ip $docker_route"
-    local http_proxy="http://${docker_route}:3128"
-    CMD_ENV="export ${CMD_ENV} http_proxy='http://${docker_route}:3128'"
+    local http_proxy="http://${DOCKER_ROUTE}:3128"
+    CMD_ENV="${CMD_ENV} http_proxy=http://${DOCKER_ROUTE}:3128"
     success "Proxy $http_proxy"
   else
     info 'Not setting http_proxy'
   fi
 }
 
+_pip_proxy() {
+    info 'pip proxy'
+
+    # pip defaults
+    PIP_INDEX_URL='https://pypi.python.org/simple'
+    PIP_TRUSTED_HOST='127.0.0.1'
+
+    if [ ${SET_PIP_PROXY} = "1" ]; then
+        # use a local devpi install
+        PIP_INDEX_URL="http://${DOCKER_ROUTE}:3141/root/pypi/+simple/"
+        PIP_TRUSTED_HOST="${DOCKER_ROUTE}"
+    fi
+
+    CMD_ENV="${CMD_ENV} NO_PROXY=${DOCKER_ROUTE} no_proxy=${DOCKER_ROUTE} PIP_INDEX_URL=${PIP_INDEX_URL} PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}"
+    DOCKER_BUILD_PIP_PROXY='--build-arg ARG_PIP_INDEX_URL='${PIP_INDEX_URL}' --build-arg ARG_PIP_TRUSTED_HOST='${PIP_TRUSTED_HOST}''
+
+    success "Pip index url ${PIP_INDEX_URL}"
+}
 
 # ssh setup for ci
 _ci_ssh_agent() {
@@ -209,16 +243,13 @@ create_build_image() {
 
 
 create_base_image() {
-  info 'create base image'
-  set -x
-  (
-    ${CMD_ENV}
-    docker build ${DOCKER_BUILD_OPTS} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .
-  )
-  set +x
-  success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
+    info 'create base image'
+    set -x
+    (
+    ${CMD_ENV}; docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
+    set +x
+    success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
 }
-
 
 create_release_tarball() {
   info 'create release tarball'
@@ -463,15 +494,8 @@ echo ''
 info "$0 $@"
 make_virtualenv
 
-if [ ${SET_HTTP_PROXY} = "1" ]; then
-  _http_proxy
-else
-  info 'Not setting http_proxy'
-fi
-
 _docker_options
 _display_env
-
 
 case $ACTION in
   pythonlint)
