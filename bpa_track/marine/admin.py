@@ -21,7 +21,8 @@ from bpa_track.common.admin import (
 from .models import (
         Amplicon,
         Metagenomic,
-        TransferLog
+        TransferLog,
+        SampleStateTrack
         )
 
 
@@ -52,3 +53,4 @@ class MetagenomicAdmin(CommonMetagenomicAdmin):
 admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
+admin.site.register(SampleStateTrack)
