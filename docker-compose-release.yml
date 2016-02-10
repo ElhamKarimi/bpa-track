@@ -1,0 +1,60 @@
+releasedatadev:
+  image: muccg/debian8-base
+  volumes:
+    - .:/app
+    - ./data/dev:/data
+
+releasedb:
+  image: postgres:9.5
+  environment:
+    - POSTGRES_USER=webapp
+    - POSTGRES_PASSWORD=webapp
+  ports:
+    - "5432"
+
+releasecache:
+  image: memcached:1.4
+
+releaserunserver:
+  build: .
+  dockerfile: Dockerfile-dev
+  command: runserver
+  environment:
+    - DJANGO_SETTINGS_MODULE=config.settings.local
+    - DBUSER=webbapp
+    - WAIT_FOR_DB=1
+    - WAIT_FOR_CACHE=1
+  ports:
+    - "8000:8000"
+  volumes_from:
+    - datadev
+  links:
+    - db
+    - cache
+
+releaseuwsgi:
+  image: bpatrack_runserver
+  command: uwsgi
+  environment:
+    - DBUSER=webapp
+    - WAIT_FOR_DB=1
+    - WAIT_FOR_CACHE=1
+    - WAIT_FOR_RUNSERVER=1
+  ports:
+    - "9000:9000"
+    - "9001:9001"
+    - "9100:9100"
+    - "9101:9101"
+  volumes_from:
+    - releasedatadev
+  links:
+    - releasedb
+    - releasecache
+    - releaserunserver
+
+releasenginx:
+  image: muccg/nginx-uwsgi:1.9
+  ports:
+    - "8443:443"
+  links:
+    - releaseuwsgi
