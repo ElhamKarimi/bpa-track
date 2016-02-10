@@ -17,6 +17,9 @@ APPS_DIR = ROOT_DIR.path('bpa_track')
 
 env = environ.Env()
 
+SCRIPT_NAME = env("script_name", os.environ.get("HTTP_SCRIPT_NAME", ""))
+FORCE_SCRIPT_NAME = env("force_script_name", "") or SCRIPT_NAME or None
+
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
