@@ -194,7 +194,7 @@ then
     set +x
     
     # create release tarball
-    DEPS="/env /app/uwsgi /app/docker-entrypoint.sh /app/"
+    DEPS="/env /app/uwsgi /app/docker-entrypoint.sh /app/config /app/bpa_track /app/libs"
     cd /data
     exec tar -cpzf bpatrack-${GIT_TAG}.tar.gz ${DEPS}
 fi
