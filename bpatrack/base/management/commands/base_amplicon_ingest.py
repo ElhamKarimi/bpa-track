@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Ingests Marine Microbes Amplicon metadata from server into database.
+Ingests BASE Amplicon metadata from server into database.
 """
 
 from django.core.management.base import BaseCommand, CommandError
@@ -17,18 +17,18 @@ import os
 from libs.excel_wrapper import ExcelWrapper
 from libs.fetch_data import Fetcher
 
-from bpa_track.common.models import Facility
-from bpa_track.base.models import Amplicon
+from bpatrack.common.models import Facility
+from bpatrack.base.models import Amplicon
 
 METADATA_ROOT = os.path.join(os.path.expanduser('~'), 'bpametadata')
 
-METADATA_URL = "https://downloads.bioplatforms.com/marine_microbes/tracking/amplicons/"
-DATA_DIR = Path(METADATA_ROOT, "marine_microbes/amplicon_metadata/")
+METADATA_URL = "https://downloads.bioplatforms.com/base/tracking/amplicons/"
+DATA_DIR = Path(METADATA_ROOT, "base/amplicon_metadata/")
 
 logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
-    help = 'Ingest Marine Microbe Amplicons'
+    help = 'Ingest BASE Amplicons'
 
     def _get_data(self, file_name):
         """ The data sets is relatively small, so make a in-memory copy to simplify some operations. """
@@ -94,15 +94,15 @@ class Command(BaseCommand):
             if path.isfile() and path.ext == ".xlsx":
                 return True
 
-        self.stdout.write(self.style.SUCCESS("Ingesting Marine Microbe Amplicon metadata from {0}".format(DATA_DIR)))
+        self.stdout.write(self.style.SUCCESS("Ingesting BASE Amplicon metadata from {0}".format(DATA_DIR)))
         for metadata_file in DATA_DIR.walk(filter=is_metadata):
-            self.stdout.write(self.style.SUCCESS("Processing Marine Microbe Amplicon Metadata file {0}".format(metadata_file)))
+            self.stdout.write(self.style.SUCCESS("Processing BASE Amplicon Metadata file {0}".format(metadata_file)))
             samples = list(self._get_data(metadata_file))
             self._add_samples(samples)
 
 
     def handle(self, *args, **options):
-        fetcher = Fetcher(DATA_DIR, METADATA_URL)
+        fetcher = Fetcher(DATA_DIR, METADATA_URL, auth=("base", "b4s3"))
         fetcher.clean()
         fetcher.fetch_metadata_from_folder()
 

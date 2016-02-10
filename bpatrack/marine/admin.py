@@ -3,11 +3,11 @@ from django.contrib import admin
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
-from bpa_track.users.models import User
-from bpa_track.users.admin import UserWidget
+from bpatrack.users.models import User
+from bpatrack.users.admin import UserWidget
 
-from bpa_track.common.models import Facility
-from bpa_track.common.admin import (
+from bpatrack.common.models import Facility
+from bpatrack.common.admin import (
         FacilityWidget,
         DateField,
         CommonAmpliconResource,

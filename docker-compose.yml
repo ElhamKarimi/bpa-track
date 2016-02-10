@@ -20,7 +20,7 @@ runserver:
   dockerfile: Dockerfile-dev
   command: runserver
   environment:
-    - DJANGO_SETTINGS_MODULE=config.settings.local
+    - DJANGO_SETTINGS_MODULE=bpatrack.config.settings.local
     - DBUSER=webbapp
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from bpa_track.users.models import User
-from bpa_track.common.models import (
+from bpatrack.users.models import User
+from bpatrack.common.models import (
         Facility,
         TransferLog,
         Amplicon,

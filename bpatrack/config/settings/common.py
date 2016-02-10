@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for bpa_track project.
+Django settings for bpatrack project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -13,7 +13,7 @@ from __future__ import absolute_import, unicode_literals
 import environ
 
 ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
-APPS_DIR = ROOT_DIR.path('bpa_track')
+APPS_DIR = ROOT_DIR.path('')
 
 env = environ.Env()
 
@@ -48,10 +48,10 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
-    'bpa_track.users',  # custom users app
-    'bpa_track.common', # common usefull things
-    'bpa_track.base',
-    'bpa_track.marine',
+    'bpatrack.users',  # custom users app
+    'bpatrack.common', # common usefull things
+    'bpatrack.base',
+    'bpatrack.marine',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -69,10 +69,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-# MIGRATIONS CONFIGURATION
+# MIGRATIONS CONFGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'bpa_track.contrib.sites.migrations'
+    'sites': 'bpatrack.contrib.sites.migrations'
 }
 
 # DEBUG
@@ -197,10 +197,10 @@ MEDIA_URL = '/media/'
 
 # URL Configuration
 # ------------------------------------------------------------------------------
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'bpatrack.config.urls'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'bpatrack.config.wsgi.application'
 
 # AUTHENTICATION CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -212,8 +212,8 @@ AUTHENTICATION_BACKENDS = (
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_ADAPTER = 'bpa_track.users.adapter.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'bpa_track.users.adapter.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'bpatrack.users.adapter.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'bpatrack.users.adapter.SocialAccountAdapter'
 ACCOUNT_ALLOW_REGISTRATION = True
 
 # Custom user app defaults

@@ -5,7 +5,7 @@ ARG ARG_GIT_TAG
 
 ENV GIT_TAG $ARG_GIT_TAG
 
-ENV DJANGO_SETTINGS_MODULE config.settings.production
+ENV DJANGO_SETTINGS_MODULE bpatrack.config.settings.production
 
 ADD build/bpatrack-$GIT_TAG.tar.gz /
 
