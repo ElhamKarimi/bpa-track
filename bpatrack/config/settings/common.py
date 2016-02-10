@@ -12,12 +12,13 @@ from __future__ import absolute_import, unicode_literals
 
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # (/a/b/myfile.py - 3 = /)
-APPS_DIR = ROOT_DIR.path('')
+ROOT_DIR = environ.Path(__file__) - 4  # (/a/b/myfile.py - 3 = /)
+APPS_DIR = ROOT_DIR.path('bpatrack')
 
 env = environ.Env()
 
-SCRIPT_NAME = env("HTTP_SCRIPT_NAME", default="bpatrack")
+SCRIPT_NAME = env("HTTP_SCRIPT_NAME", default="")
+FORCE_SCRIPT_NAME = SCRIPT_NAME or None
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -171,10 +172,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
-STATIC_URL = '/static/'
+STATIC_ROOT = env("STATIC_ROOT", default=str(ROOT_DIR('static')))
+STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
+
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
