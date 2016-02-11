@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include, url, patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
@@ -23,6 +23,13 @@ urlpatterns = [
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# pattern for serving statically
+urlpatterns += patterns(
+    '',
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve',
+     {'document_root': settings.STATIC_ROOT, 'show_indexes': True})
+)
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
