@@ -67,7 +67,9 @@ django_defaults() {
     : ${MEDIA_ROOT="/data/static/media"}
     : ${LOG_DIRECTORY="/data/log"}
     : ${DJANGO_SETTINGS_MODULE="bpatrack.config.settings.production"}
+    #: ${HTTP_SCRIPT_NAME="foo"}
 
+    #echo "HTTP_SCRIPT_NAME is ${HTTP_SCRIPT_NAME}"
     echo "DEPLOYMENT is ${DEPLOYMENT}"
     echo "PRODUCTION is ${PRODUCTION}"
     echo "DEBUG is ${DEBUG}"
