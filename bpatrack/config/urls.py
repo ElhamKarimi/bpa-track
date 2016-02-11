@@ -8,13 +8,15 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
+admin.autodiscover()
+
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name="home"),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
 
     # Django Admin, use {% url 'admin:index' %}
-    url(settings.ADMIN_URL, include(admin.site.urls)),
-
+    # url(settings.ADMIN_URL, include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
     # User management
     url(r'^users/', include("bpatrack.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
