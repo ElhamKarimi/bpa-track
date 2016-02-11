@@ -14,8 +14,8 @@ from unipath import Path
 import logging
 import os
 
-from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from bpatrack.libs.excel_wrapper import ExcelWrapper
+from bpatrack.libs.fetch_data import Fetcher
 
 from bpatrack.common.models import Facility
 from bpatrack.base.models import Amplicon
@@ -90,9 +90,9 @@ class Command(BaseCommand):
             if path.isfile() and path.ext == ".xlsx":
                 return True
 
-        self.stdout.write(self.style.SUCCESS("Ingesting Marine Microbes Amplicon metadata from {0}".format(DATA_DIR)))
+        self.stdout.write(self.style.SUCCESS("Ingesting Marine Microbes Metagenomic metadata from {0}".format(DATA_DIR)))
         for metadata_file in DATA_DIR.walk(filter=is_metadata):
-            self.stdout.write(self.style.SUCCESS("Processing Marine Microbes Amplicon Metadata file {0}".format(metadata_file)))
+            self.stdout.write(self.style.SUCCESS("Processing Marine Microbes  Metadata file {0}".format(metadata_file)))
             samples = list(self._get_data(metadata_file))
             self._add_samples(samples)
 

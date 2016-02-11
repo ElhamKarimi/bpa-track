@@ -14,8 +14,8 @@ from unipath import Path
 import logging
 import os
 
-from libs.excel_wrapper import ExcelWrapper
-from libs.fetch_data import Fetcher
+from bpatrack.libs.excel_wrapper import ExcelWrapper
+from bpatrack.libs.fetch_data import Fetcher
 
 from bpatrack.common.models import Facility
 from bpatrack.base.models import Amplicon
