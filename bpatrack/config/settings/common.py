@@ -18,7 +18,7 @@ APPS_DIR = ROOT_DIR.path('bpatrack')
 env = environ.Env()
 
 SCRIPT_NAME = env("HTTP_SCRIPT_NAME", default="")
-# FORCE_SCRIPT_NAME = SCRIPT_NAME or None
+FORCE_SCRIPT_NAME = SCRIPT_NAME or None
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
