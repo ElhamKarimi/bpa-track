@@ -18,8 +18,9 @@ readonly VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
 : ${DOCKER_NO_CACHE:="0"}
 : ${DOCKER_PULL:="1"}
 
-# Do not set these, they are vars used below
-CMD_ENV=''
+: ${DJANGO_MAILGUN_API_KEY:="NOTSET"}
+
+CMD_ENV="DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}"
 DOCKER_BUILD_OPTS=''
 DOCKER_ROUTE=''
 DOCKER_RUN_OPTS='-e PIP_INDEX_URL -e PIP_TRUSTED_HOST'
@@ -37,6 +38,7 @@ usage() {
     Release docker image       DOCKER_IMAGE                ${DOCKER_IMAGE}
     Use a http proxy           SET_HTTP_PROXY              ${SET_HTTP_PROXY}
     Use a pip proxy            SET_PIP_PROXY               ${SET_PIP_PROXY}
+    Use mailgun to send mail   DJANGO_MAILGUN_API_KEY      ${DJANGO_MAILGUN_API_KEY}
 
   Usage: ${PROGNAME} options
 
@@ -120,14 +122,14 @@ _docker_options() {
 
 _display_env() {
   info "Environment set as:"
-  info "DOCKER_PULL        ${DOCKER_PULL}"
-  info "DOCKER_NO_CACHE    ${DOCKER_NO_CACHE}"
-  info "DOCKER_BUILD_PROXY ${DOCKER_BUILD_PROXY}"
-  info "DOCKER_USE_HUB     ${DOCKER_USE_HUB}"
-  info "DOCKER_IMAGE       ${DOCKER_IMAGE}"
-  info "SET_HTTP_PROXY     ${SET_HTTP_PROXY}"
+  info "DOCKER_PULL            ${DOCKER_PULL}"
+  info "DOCKER_NO_CACHE        ${DOCKER_NO_CACHE}"
+  info "DOCKER_BUILD_PROXY     ${DOCKER_BUILD_PROXY}"
+  info "DOCKER_USE_HUB         ${DOCKER_USE_HUB}"
+  info "DOCKER_IMAGE           ${DOCKER_IMAGE}"
+  info "SET_HTTP_PROXY         ${SET_HTTP_PROXY}"
+  info "DJANGO_MAILGUN_API_KEY ${DJANGO_MAILGUN_API_KEY}"
 }
-
 
 _http_proxy() {
   info 'http proxy'
