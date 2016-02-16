@@ -38,3 +38,4 @@ xlrd
 unipath
 beautifulsoup4
 uwsgi==2.0.12
+django_mailgun
