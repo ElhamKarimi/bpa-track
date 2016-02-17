@@ -20,9 +20,10 @@ urlpatterns = [
     # User management
     url(r'^users/', include("bpatrack.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
-    # static
-    # url(r'^static/(?P<path>.*)$', django.views.static.serve, {'document_root': settings.STATIC_ROOT, 'show_indexes': True}),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+      + static(r'^static/(?P<path>.*)$', document_root=settings.STATIC_ROOT)
+
+
 
 if settings.DEBUG:
     urlpatterns += [
