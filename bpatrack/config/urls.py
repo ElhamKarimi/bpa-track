@@ -20,10 +20,7 @@ urlpatterns = [
     url(r'^users/', include("bpatrack.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
-      + static(r'^static/(?P<path>.*)$', document_root=settings.STATIC_ROOT) \
       + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-
 
 if settings.DEBUG:
     urlpatterns += [
