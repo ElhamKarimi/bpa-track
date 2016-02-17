@@ -13,14 +13,17 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name="home"),
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
-
     # Django Admin, use {% url 'admin:index' %}
     url(r'^admin/', admin.site.urls),
     # User management
     url(r'^users/', include("bpatrack.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
-      + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    ]
+
+urlpatterns += patterns(
+    '',
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT, 'show_indexes': True})
+    )
 
 if settings.DEBUG:
     urlpatterns += [
