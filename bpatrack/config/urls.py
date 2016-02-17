@@ -15,13 +15,13 @@ urlpatterns = [
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
 
     # Django Admin, use {% url 'admin:index' %}
-    # url(settings.ADMIN_URL, include(admin.site.urls)),
     url(r'^admin/', admin.site.urls),
     # User management
     url(r'^users/', include("bpatrack.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
-      + static(r'^static/(?P<path>.*)$', document_root=settings.STATIC_ROOT)
+      + static(r'^static/(?P<path>.*)$', document_root=settings.STATIC_ROOT) \
+      + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
 
