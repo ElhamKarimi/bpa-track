@@ -1,8 +1,11 @@
 
 from dateutil.parser import parse as date_parser
 from django.contrib import admin
+from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
+
+JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
 
 from .models import (
         Facility,
@@ -120,6 +123,22 @@ class CommonTransferLogResource(resources.ModelResource):
         import_id_fields = ('folder_name', )
 
 class CommonTransferLogAdmin(ImportExportModelAdmin):
+
+
+    def show_downloads_url(self, obj):
+        short = obj.downloads_url.split("/")[-2]
+        return format_html("<a href='{url}'>{short}</a>", url=obj.downloads_url, short=short)
+
+    show_downloads_url.short_description = "Downloads URL"
+    show_downloads_url.allow_tags = True
+
+    def show_ticket_url(self, obj):
+        jurl = JIRA_URL + obj.ticket_url
+        return format_html("<a href='{jurl}'>{url}</a>", url=obj.ticket_url, jurl=jurl)
+
+    show_ticket_url.short_description = "Ticket URL"
+    show_ticket_url.allow_tags = True
+
     date_hierarchy = 'transfer_to_archive_date'
 
     list_display = (
@@ -130,8 +149,8 @@ class CommonTransferLogAdmin(ImportExportModelAdmin):
             'folder_name',
             'transfer_to_archive_date',
             'notes',
-            'ticket_url',
-            'downloads_url'
+            'show_ticket_url',
+            'show_downloads_url'
             )
 
     list_filter = (
