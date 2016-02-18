@@ -126,8 +126,11 @@ class CommonTransferLogAdmin(ImportExportModelAdmin):
 
 
     def show_downloads_url(self, obj):
-        short = obj.downloads_url.split("/")[-2]
-        return format_html("<a href='{url}'>{short}</a>", url=obj.downloads_url, short=short)
+        try:
+            short = obj.downloads_url.split("/")[-2]
+            return format_html("<a href='{url}'>{short}</a>", url=obj.downloads_url, short=short)
+        except IndexError:
+            return ""
 
     show_downloads_url.short_description = "Downloads URL"
     show_downloads_url.allow_tags = True
