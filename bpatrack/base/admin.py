@@ -84,7 +84,6 @@ class SampleReceivedResource(resources.ModelResource):
                 )
 
 
-@admin.register(SampleReceived)
 class SampleReceivedAdmin(ImportExportModelAdmin):
     resource_class = SampleReceivedResource
     list_display = (
@@ -96,6 +95,13 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             )
 
     date_hierarchy = 'date_received'
+
+    list_filter = (
+            'facility',
+            'date_received',
+            'submitter'
+            )
+
     search_fields = (
             'extraction_id',
             'facility__name',
@@ -104,7 +110,7 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             'batch_number'
             )
 
-
+admin.site.register(SampleReceived, SampleReceivedAdmin)
 admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
