@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
 
@@ -91,7 +93,7 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             'facility',
             'batch_number',
             'date_received',
-            'submitter',
+            'submitter_link',
             )
 
     date_hierarchy = 'date_received'
@@ -109,6 +111,14 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             'date_received',
             'batch_number'
             )
+
+    def submitter_link(self, obj):
+        name = obj.submitter.username
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("users:detail", kwargs={'username': name}),
+            name)
+            )
+    submitter_link.short_description = 'submitter'
 
 admin.site.register(SampleReceived, SampleReceivedAdmin)
 admin.site.register(Amplicon, AmpliconAdmin)
