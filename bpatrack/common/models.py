@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Facility(models.Model):
     """ The Sequencing Facility """
 
@@ -12,6 +13,30 @@ class Facility(models.Model):
 
     def __str__(self):
         return '{0}'.format(self.name)
+
+
+class DataSet(models.Model):
+    """ Model representing a dataset """
+
+    name = models.CharField('Dataset', max_length=20, primary_key=True)
+    transfer_to_archive_date = models.DateField("Transfer to Archive Date")
+    facility = models.ForeignKey(
+            Facility,
+            related_name='%(app_label)s_%(class)s_facility',
+            verbose_name='Sequencing Facility',
+            blank=True,
+            null=True)
+
+    ticket_url = models.URLField('JIRA')
+    downloads_url = models.URLField('Downloads')
+    note = models.TextField(blank=True)
+
+    class Meta:
+        abstract = True
+        verbose_name_plural = 'Datasets'
+
+    def __str__(self):
+        return '{}'.format(self.name)
 
 
 class TransferLog(models.Model):

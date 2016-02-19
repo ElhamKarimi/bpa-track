@@ -3,13 +3,31 @@ from django.db import models
 from bpatrack.users.models import User
 from bpatrack.common.models import (
         Facility,
-        TransferLog,
         Amplicon,
         Metagenomic,
+        DataSet,
         )
 
-class TransferLog(TransferLog):
-    pass
+class DataSet(DataSet):
+    project = "BASE"
+
+class TransferLog(models.Model):
+    """ Notes transfer of a dataset to the archive """
+
+    transfer_to_facility_date = models.DateField("Transfer to Facility Date")
+    description = models.CharField("Description", max_length=100)
+    data_type = models.CharField("Data Type", max_length=50)
+    folder_name = models.CharField("Folder", max_length=100)
+
+    dataset = models.ForeignKey(DataSet)
+
+    class Meta:
+        verbose_name = 'Transfer Log'
+        verbose_name_plural = 'Transfers'
+
+    def __str__(self):
+        return "{} {}".format(self.facility, self.description)
+
 
 class Metagenomic(Metagenomic):
     pass

@@ -19,15 +19,16 @@ from bpatrack.common.admin import (
         CommonMetagenomicAdmin,
         CommonTransferLogResource,
         CommonTransferLogAdmin,
+        CommonDataSetAdmin,
         )
 
 from .models import (
         SampleReceived,
         Amplicon,
         Metagenomic,
-        TransferLog
+        TransferLog,
+        DataSet,
         )
-
 
 # TransferLog
 class TransferLogResource(CommonTransferLogResource):
@@ -85,7 +86,6 @@ class SampleReceivedResource(resources.ModelResource):
                 'metadata_filename',
                 )
 
-
 class SampleReceivedAdmin(ImportExportModelAdmin):
     resource_class = SampleReceivedResource
     list_display = (
@@ -120,6 +120,7 @@ class SampleReceivedAdmin(ImportExportModelAdmin):
             )
     submitter_link.short_description = 'submitter'
 
+admin.site.register(DataSet, CommonDataSetAdmin)
 admin.site.register(SampleReceived, SampleReceivedAdmin)
 admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)

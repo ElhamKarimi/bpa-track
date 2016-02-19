@@ -122,8 +122,8 @@ class CommonTransferLogResource(resources.ModelResource):
         abstract = True
         import_id_fields = ('folder_name', )
 
-class CommonTransferLogAdmin(ImportExportModelAdmin):
 
+class CommonTransferLogAdmin(ImportExportModelAdmin):
 
     def show_downloads_url(self, obj):
         try:
@@ -174,3 +174,18 @@ class CommonTransferLogAdmin(ImportExportModelAdmin):
             'ticket_url',
             'downloads_url'
             )
+
+
+class CommonDataSetAdmin(ImportExportModelAdmin):
+    date_hierarchy = 'transfer_to_archive_date'
+
+    list_display = (
+            'name',
+            'facility',
+            'transfer_to_archive_date',
+            'ticket_url',
+            'downloads_url',
+            'note')
+
+    list_filter = ('facility',)
+    search_fields = ('facility__name', 'comments', )
