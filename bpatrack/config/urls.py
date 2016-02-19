@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^about/$', TemplateView.as_view(template_name='pages/about.html'), name="about"),
     # Django Admin, use {% url 'admin:index' %}
     url(r'^admin/', admin.site.urls),
+    # url(r'^admin_tools/', include('admin_tools.urls')),
     # User management
     url(r'^users/', include("bpatrack.users.urls", namespace="users")),
     url(r'^accounts/', include('allauth.urls')),

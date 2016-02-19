@@ -13,6 +13,7 @@ ENV PIP_TRUSTED_HOST="127.0.0.1"
 RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential \
   git \
+  libjpeg-dev \
   libpq-dev \
   libxml2-dev \
   libxslt1-dev \
