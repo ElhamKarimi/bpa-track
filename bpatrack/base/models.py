@@ -14,6 +14,7 @@ class DataSet(DataSet):
 class TransferLog(models.Model):
     """ Notes transfer of a dataset to the archive """
 
+    facility = models.ForeignKey(Facility)
     transfer_to_facility_date = models.DateField("Transfer to Facility Date")
     description = models.CharField("Description", max_length=100)
     data_type = models.CharField("Data Type", max_length=50)

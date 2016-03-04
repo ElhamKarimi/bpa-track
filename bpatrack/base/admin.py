@@ -35,8 +35,8 @@ class TransferLogResource(CommonTransferLogResource):
     class Meta(CommonTransferLogResource.Meta):
         model = TransferLog
 
-class TransferLogAdmin(CommonTransferLogAdmin):
-    resource_class = TransferLogResource
+#class TransferLogAdmin(CommonTransferLogAdmin):
+#    resource_class = TransferLogResource
 
 # Amplicon
 class AmpliconResource(CommonAmpliconResource):
@@ -124,4 +124,4 @@ admin.site.register(DataSet, CommonDataSetAdmin)
 admin.site.register(SampleReceived, SampleReceivedAdmin)
 admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
-admin.site.register(TransferLog, TransferLogAdmin)
+#admin.site.register(TransferLog, TransferLogAdmin)
