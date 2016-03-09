@@ -29,7 +29,7 @@ class DataSet(models.Model):
 
     ticket_url = models.URLField('JIRA')
     downloads_url = models.URLField('Downloads')
-    note = models.TextField(blank=True)
+    note = models.TextField("Note", lank=True)
 
     class Meta:
         abstract = True
