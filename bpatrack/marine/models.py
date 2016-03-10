@@ -64,39 +64,38 @@ class ContextualPelagic(models.Model):
     #Oxygen (μmol/L) Lab
     oxygen = models.IntegerField("Oxygen (μmol/L) Lab")
     #Oxygen (ml/L) CTD
+    oxygen_ctd = models.IntegerField("Oxygen (ml/L) CDT")
     #Nitrate/Nitrite (μmol/L)
+    nitrate = models.IntegerField("Nitrate/Nitrite (μmol/L)")
     #Phosphate (μmol/L)
+    phosphate = models.IntegerField("Phosphate (μmol/L)")
     #Ammonium (μmol/L)
+    ammonium = models.IntegerField("Ammonium (μmol/L)")
     #Total CO2 (μmol/kg)
+    co2_total = models.IntegerField("Total CO2 (μmol/kg)")
     #Total alkalinity (μmol/kg)
+    alkalinity_total = models.IntegerField("Total alkalinity (μmol/kg)")
     #Temperature [ITS-90, deg C]
+    temperature = models.IntegerField("Temperature [ITS-90, deg C]")
     #Conductivity [S/m]
+    condictivity = models.IntegerField("Conductivity [S/m]")
     #Turbidity (Upoly 0, WET Labs FLNTURT)
+    turbitity = models.IntegerField("Turbidity (Upoly 0, WET Labs FLNTURT)")
     #Salinity [PSU] Laboratory
+    salinity = models.IntegerField("Salinity [PSU] Laboratory")
     #microbial abundance (cells per ml)
+    microbial_abandance = models.IntegerField("Microbial abundance (cells per ml)")
     #chlorophyll a (μg/L)
+    chlorophyl = models.IntegerField("Chlorophyll a (μg/L)")
     #%total carbon
+    carbon_total = models.IntegerField("% total carbon")
     #% total inorganc carbon
+    inorganic_carbon_total = models.IntegerField("% total inorganc carbon")
     #light intensity (lux)
-
-
-
-
-    extraction_id = models.CharField(
-            'Sample Extraction ID',
-            max_length=100,
-            primary_key=True)
-
-    quality_check_preformed = models.BooleanField("Quality Checked", default=False)
-    metagenomics_data_generated = models.BooleanField("Metagenomics Data Generated", default=False)
-    amplicon_16s_data_generated = models.BooleanField("Amplicon 16S Data Generated", default=False)
-    amplicon_18s_data_generated = models.BooleanField("Amplicon 18S Data Generated", default=False)
-    amplicon_ITS_data_generated = models.BooleanField("Amplicon ITS Data Generated", default=False)
-    minimum_contextual_data_received = models.BooleanField("Minimum Contextual Data Received", default=False)
-    full_contextual_data_received = models.BooleanField("Full Contextual Data Received", default=False)
+    flux = models.IntegerField("Light intensity (lux)")
 
     class Meta:
-        verbose_name = 'Sample State Track Log'
+        verbose_name = 'Pelagic marine Contextual Data'
 
     def __str__(self):
-        return "{}" .format( self.extraction_id)
+        return "{} Pelagic Contextual Data" .format( self.extraction_id)

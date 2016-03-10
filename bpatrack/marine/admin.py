@@ -23,7 +23,8 @@ from .models import (
         Amplicon,
         Metagenomic,
         TransferLog,
-        SampleStateTrack
+        SampleStateTrack,
+        ContextualPelagic,
         )
 
 
@@ -80,3 +81,4 @@ admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
+admin.site.register(ContextualPelagic)
