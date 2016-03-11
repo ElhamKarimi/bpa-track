@@ -78,7 +78,7 @@ class ContextualPelagic(models.Model):
     #Temperature [ITS-90, deg C]
     temperature = models.IntegerField("Temperature [ITS-90, deg C]")
     #Conductivity [S/m]
-    condictivity = models.IntegerField("Conductivity [S/m]")
+    conductivity = models.IntegerField("Conductivity [S/m]")
     #Turbidity (Upoly 0, WET Labs FLNTURT)
     turbitity = models.IntegerField("Turbidity (Upoly 0, WET Labs FLNTURT)")
     #Salinity [PSU] Laboratory
