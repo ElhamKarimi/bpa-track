@@ -25,6 +25,7 @@ from .models import (
         TransferLog,
         SampleStateTrack,
         ContextualPelagic,
+        ContextualOpenWater,
         )
 
 
@@ -123,10 +124,93 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
                 }),
             )
 
+class ContextualOpenWaterAdmin(ImportExportModelAdmin):
+    list_display = (
+            'bpa_id',
+            'date_sampled',
+            'location_description',
+            )
+
+    _required = (
+            'bpa_id',
+            'date_sampled',
+            'time_sampled',
+            'lat',
+            'lon',
+            'dept',
+            'location_description',
+            'host_species',
+            )
+
+    _extra = (
+            'ph',
+            'oxygen',
+            'oxygen_ctd',
+            'silicate',
+            'nitrate',
+            'fluorescence',
+            'tss',
+            'inorganic_fraction',
+            'biomass',
+            'allo',
+            'alpha_beta_car',
+            'nth',
+            'asta',
+            'beta_beta_car',
+            'beta_epi_car',
+            'but_fuco',
+            'cantha',
+            'cphl_a',
+            'cphl_b',
+            'cphl_c1c2',
+            'cphl_c1',
+            'cphl_c2',
+            'cphl_c3',
+            'cphlide_a',
+            'diadchr',
+            'diadino',
+            'diato',
+            'dino',
+            'dv_cphl_a_and_cphl_a',
+            'dv_cphl_a',
+            'dv_cphl_b_and_cphl_b',
+            'dv_cphl_b',
+            'echin',
+            'fuco',
+            'gyro',
+            'hex_fuco',
+            'keto_hex_fuco',
+            'lut',
+            'lyco',
+            'mg_dvp',
+            'neo',
+            'perid',
+            'phide_a',
+            'phytin_a',
+            'phytin_b',
+            'pras',
+            'pyrophide_a',
+            'pyrophytin_a',
+            'viola',
+            'zea',
+            )
+
+    fieldsets = (
+            (None, {
+                'fields': _required,
+                }),
+            ('Detailed Contextual', {
+                'classes': ('collapse',),
+                'fields': _extra,
+                }),
+            )
+
+
 
 admin.site.register(Amplicon, AmpliconAdmin)
 admin.site.register(Metagenomic, MetagenomicAdmin)
 admin.site.register(TransferLog, TransferLogAdmin)
 admin.site.register(SampleStateTrack, SampleStateTrackAdmin)
 admin.site.register(ContextualPelagic, ContextualPelagicAdmin)
+admin.site.register(ContextualOpenWater, ContextualOpenWaterAdmin)
 

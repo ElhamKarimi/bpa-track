@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db import models
 from bpatrack.users.models import User
 from bpatrack.common.models import (
@@ -98,4 +97,156 @@ class ContextualPelagic(models.Model):
         verbose_name = 'Pelagic marine Contextual Data'
 
     def __str__(self):
-        return "{} Pelagic Contextual Data" .format( self.bpa_id)
+        return "{} Pelagic Contextual Data".format( self.bpa_id)
+
+
+class ContextualOpenWater(models.Model):
+    
+    #BPA_ID
+    bpa_id = models.IntegerField('BPA ID', primary_key=True)
+    #Date sampled (Y-M-D)
+    date_sampled = models.DateField("Date Sampled")
+    #Time sampled (hh:mm)
+    time_sampled = models.TimeField("Time Sampled")
+    # replace with geodjango
+    #lat (decimal degrees)
+    lat = models.DecimalField("Latitude", max_digits=9, decimal_places=6)
+    #long (decimal degrees)
+    lon = models.DecimalField("Longitude", max_digits=9, decimal_places=6)
+    #Depth (m)
+    dept = models.IntegerField('Depth')
+    #Location description
+    location_description = models.TextField("Location Description")
+    #Notes
+    note = models.TextField("Note", null=True, blank=True)
+    #Host Species
+    host_species = models.TextField("Host Species", null=True, blank=True)
+    #pH Level (H2O) (pH)
+    ph = models.IntegerField("pH Level H20", null=True, blank=True)
+    #Oxygen (μmol/L) Lab
+    oxygen = models.IntegerField("Oxygen (μmol/L) Lab", null=True, blank=True)
+    #Oxygen (ml/L) CTD
+    oxygen_ctd = models.IntegerField("Oxygen (ml/L) CDT", null=True, blank=True)
+    # Silicate (μmol/L)
+    silicate = models.IntegerField("Silicate (μmol/L)", null=True, blank=True)
+    #Nitrate/Nitrite (μmol/L)
+    nitrate = models.IntegerField("Nitrate/Nitrite (μmol/L)", null=True, blank=True)
+    #Phosphate (μmol/L)
+    phosphate = models.IntegerField("Phosphate (μmol/L)", null=True, blank=True)
+    #Ammonium (μmol/L)
+    ammonium = models.IntegerField("Ammonium (μmol/L)", null=True, blank=True)
+    #Total CO2 (μmol/kg)
+    co2_total = models.IntegerField("Total CO2 (μmol/kg)", null=True, blank=True)
+    #Total alkalinity (μmol/kg)
+    alkalinity_total = models.IntegerField("Total alkalinity (μmol/kg)", null=True, blank=True)
+    #Temperature [ITS-90, deg C]
+    temperature = models.IntegerField("Temperature [ITS-90, deg C]", null=True, blank=True)
+    #Conductivity [S/m]
+    conductivity = models.IntegerField("Conductivity [S/m]", null=True, blank=True)
+    # Fluorescence, Wetlab ECO-AFL/FL [mg/m^3]
+    fluorescence = models.IntegerField("Fluorescence, Wetlab ECO-AFL/FL [mg/m^3]", null=True, blank=True)
+    #Turbidity (Upoly 0, WET Labs FLNTURT)
+    turbitity = models.IntegerField("Turbidity (Upoly 0, WET Labs FLNTURT)", null=True, blank=True)
+    #Salinity [PSU] CTD
+    salinity = models.IntegerField("Salinity [PSU] CTD", null=True, blank=True)
+    # Density [density, Kg/m^3]
+    density = models.IntegerField("Density [density, Kg/m^3]", null=True, blank=True)
+    # TSS [mg/L]
+    tss = models.IntegerField("TSS [mg/L]", null=True, blank=True)
+    # Inorganic Fraction [mg/L]
+    inorganic_fraction = models.IntegerField("Inorganic Fraction [mg/L]", null=True, blank=True)
+    # Organic Fraction [mg/L]
+    organic_fraction = models.IntegerField("Organic Fraction [mg/L]", null=True, blank=True)
+    # Secchi Depth (m)
+    secchi_depth = models.IntegerField("Secchi Depth (m)", null=True, blank=True)
+    # Biomass (mg/m3)
+    biomass = models.IntegerField("Biomass (mg/m3)", null=True, blank=True)
+    # ALLO [mg/m3]
+    allo = models.IntegerField("ALLO [mg/m3]", null=True, blank=True)
+    # ALPHA_BETA_CAR [mg/m3]
+    alpha_beta_car = models.IntegerField("ALPHA_BETA_CAR [mg/m3]", null=True, blank=True)
+
+    #NTH [mg/m3]
+    nth = models.IntegerField("NTH [mg/m3]", null=True, blank=True)
+    #ASTA [mg/m3]
+    asta = models.IntegerField("ASTA [mg/m3]", null=True, blank=True)
+    #BETA_BETA_CAR [mg/m3]
+    beta_beta_car = models.IntegerField("BETA_BETA_CAR [mg/m3]", null=True, blank=True)
+    #BETA_EPI_CAR [mg/m3]
+    beta_epi_car = models.IntegerField("BETA_EPI_CAR [mg/m3]", null=True, blank=True)
+    #BUT_FUCO [mg/m3]
+    but_fuco = models.IntegerField("BUT_FUCO [mg/m3]", null=True, blank=True)
+    #CANTHA [mg/m3]
+    cantha = models.IntegerField("CANTHA [mg/m3]", null=True, blank=True)
+    #CPHL_A [mg/m3]
+    cphl_a = models.IntegerField("CPHL_A [mg/m3] ", null=True, blank=True)
+    #CPHL_B [mg/m3]
+    cphl_b = models.IntegerField("CPHL_B [mg/m3]", null=True, blank=True)
+    #CPHL_C1C2 [mg/m3]
+    cphl_c1c2 = models.IntegerField("CPHL_C1C2 [mg/m3]", null=True, blank=True)
+    #CPHL_C1 [mg/m3]
+    cphl_c1 = models.IntegerField("CPHL_C1 [mg/m3]", null=True, blank=True)
+    #CPHL_C2 [mg/m3]
+    cphl_c2 = models.IntegerField("CPHL_C2 [mg/m3]", null=True, blank=True)
+    #CPHL_C3 [mg/m3]
+    cphl_c3 = models.IntegerField("CPHL_C3 [mg/m3]", null=True, blank=True)
+    #CPHLIDE_A [mg/m3]
+    cphlide_a = models.IntegerField("CPHLIDE_A [mg/m3]", null=True, blank=True)
+    #DIADCHR [mg/m3]
+    diadchr = models.IntegerField("DIADCHR [mg/m3]", null=True, blank=True)
+    #DIADINO [mg/m3]
+    diadino = models.IntegerField("DIADINO [mg/m3]", null=True, blank=True)
+    #DIATO [mg/m3]
+    diato = models.IntegerField("DIATO [mg/m3]", null=True, blank=True)
+    #DINO [mg/m3]
+    dino = models.IntegerField("DINO [mg/m3]", null=True, blank=True)
+    #DV_CPHL_A_and_CPHL_A [mg/m3]
+    dv_cphl_a_and_cphl_a = models.IntegerField("DV_CPHL_A_and_CPHL_A [mg/m3]", null=True, blank=True)
+    #DV_CPHL_A [mg/m3]
+    dv_cphl_a = models.IntegerField("DV_CPHL_A [mg/m3]", null=True, blank=True)
+    #DV_CPHL_B_and_CPHL_B [mg/m3]
+    dv_cphl_b_and_cphl_b = models.IntegerField("DV_CPHL_B_and_CPHL_B [mg/m3]", null=True, blank=True)
+    #DV_CPHL_B [mg/m3]
+    dv_cphl_b = models.IntegerField("DV_CPHL_B [mg/m3]", null=True, blank=True)
+    #ECHIN [mg/m3]
+    echin = models.IntegerField("ECHIN [mg/m3]", null=True, blank=True)
+    #FUCO [mg/m3]
+    fuco = models.IntegerField("FUCO [mg/m3]", null=True, blank=True)
+    #GYRO [mg/m3]
+    gyro = models.IntegerField("GYRO [mg/m3]", null=True, blank=True)
+    #HEX_FUCO [mg/m3]
+    hex_fuco = models.IntegerField("HEX_FUCO [mg/m3]", null=True, blank=True)
+    #KETO_HEX_FUCO [mg/m3]
+    keto_hex_fuco = models.IntegerField("KETO_HEX_FUCO [mg/m3]", null=True, blank=True)
+    #LUT [mg/m3]
+    lut = models.IntegerField("LUT [mg/m3]", null=True, blank=True)
+    #LYCO [mg/m3]
+    lyco = models.IntegerField("LYCO [mg/m3]", null=True, blank=True)
+    #MG_DVP [mg/m3]
+    mg_dvp = models.IntegerField("MG_DVP [mg/m3]", null=True, blank=True)
+    #NEO [mg/m3]
+    neo = models.IntegerField("NEO [mg/m3]", null=True, blank=True)
+    #PERID [mg/m3]
+    perid = models.IntegerField("PERID [mg/m3]", null=True, blank=True)
+    #PHIDE_A [mg/m3]
+    phide_a = models.IntegerField("PHIDE_A [mg/m3]", null=True, blank=True)
+    #PHYTIN_A [mg/m3]
+    phytin_a = models.IntegerField("PHYTIN_A [mg/m3]", null=True, blank=True)
+    #PHYTIN_B [mg/m3]
+    phytin_b = models.IntegerField("PHYTIN_B [mg/m3]", null=True, blank=True)
+    #PRAS [mg/m3]
+    pras = models.IntegerField("PRAS [mg/m3] ", null=True, blank=True)
+    #PYROPHIDE_A [mg/m3]
+    pyrophide_a = models.IntegerField("PYROPHIDE_A [mg/m3]", null=True, blank=True)
+    #PYROPHYTIN_A [mg/m3]
+    pyrophytin_a = models.IntegerField("PYROPHYTIN_A [mg/m3]", null=True, blank=True)
+    #VIOLA [mg/m3]
+    viola = models.IntegerField("VIOLA [mg/m3]", null=True, blank=True)
+    #ZEA [mg/m3]
+    zea = models.IntegerField("ZEA [mg/m3]", null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Open Water Contextual Data'
+
+    def __str__(self):
+        return "{} Open Water Data".format( self.bpa_id)
