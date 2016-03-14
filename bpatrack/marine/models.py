@@ -54,48 +54,48 @@ class ContextualPelagic(models.Model):
     #Depth (m)
     dept = models.IntegerField('Depth')
     #Location description
-    location_description = models.TextField("Location Description", blank=True)
+    location_description = models.TextField("Location Description")
     #Notes
-    note = models.TextField("Note", blank=True)
+    note = models.TextField("Note", null=True, blank=True)
     #Host Species
-    note = models.TextField("Host Species", blank=True)
+    host_species = models.TextField("Host Species", null=True, blank=True)
     #pH Level (H2O) (pH)
-    ph = models.IntegerField("pH Level H20")
+    ph = models.IntegerField("pH Level H20", null=True, blank=True)
     #Oxygen (μmol/L) Lab
-    oxygen = models.IntegerField("Oxygen (μmol/L) Lab")
+    oxygen = models.IntegerField("Oxygen (μmol/L) Lab", null=True, blank=True)
     #Oxygen (ml/L) CTD
-    oxygen_ctd = models.IntegerField("Oxygen (ml/L) CDT")
+    oxygen_ctd = models.IntegerField("Oxygen (ml/L) CDT", null=True, blank=True)
     #Nitrate/Nitrite (μmol/L)
-    nitrate = models.IntegerField("Nitrate/Nitrite (μmol/L)")
+    nitrate = models.IntegerField("Nitrate/Nitrite (μmol/L)", null=True, blank=True)
     #Phosphate (μmol/L)
-    phosphate = models.IntegerField("Phosphate (μmol/L)")
+    phosphate = models.IntegerField("Phosphate (μmol/L)", null=True, blank=True)
     #Ammonium (μmol/L)
-    ammonium = models.IntegerField("Ammonium (μmol/L)")
+    ammonium = models.IntegerField("Ammonium (μmol/L)", null=True, blank=True)
     #Total CO2 (μmol/kg)
-    co2_total = models.IntegerField("Total CO2 (μmol/kg)")
+    co2_total = models.IntegerField("Total CO2 (μmol/kg)", null=True, blank=True)
     #Total alkalinity (μmol/kg)
-    alkalinity_total = models.IntegerField("Total alkalinity (μmol/kg)")
+    alkalinity_total = models.IntegerField("Total alkalinity (μmol/kg)", null=True, blank=True)
     #Temperature [ITS-90, deg C]
-    temperature = models.IntegerField("Temperature [ITS-90, deg C]")
+    temperature = models.IntegerField("Temperature [ITS-90, deg C]", null=True, blank=True)
     #Conductivity [S/m]
-    conductivity = models.IntegerField("Conductivity [S/m]")
+    conductivity = models.IntegerField("Conductivity [S/m]", null=True, blank=True)
     #Turbidity (Upoly 0, WET Labs FLNTURT)
-    turbitity = models.IntegerField("Turbidity (Upoly 0, WET Labs FLNTURT)")
+    turbitity = models.IntegerField("Turbidity (Upoly 0, WET Labs FLNTURT)", null=True, blank=True)
     #Salinity [PSU] Laboratory
-    salinity = models.IntegerField("Salinity [PSU] Laboratory")
+    salinity = models.IntegerField("Salinity [PSU] Laboratory", null=True, blank=True)
     #microbial abundance (cells per ml)
-    microbial_abandance = models.IntegerField("Microbial abundance (cells per ml)")
+    microbial_abandance = models.IntegerField("Microbial abundance (cells per ml)", null=True, blank=True)
     #chlorophyll a (μg/L)
-    chlorophyl = models.IntegerField("Chlorophyll a (μg/L)")
+    chlorophyl = models.IntegerField("Chlorophyll a (μg/L)", null=True, blank=True)
     #%total carbon
-    carbon_total = models.IntegerField("% total carbon")
+    carbon_total = models.IntegerField("% total carbon", null=True, blank=True)
     #% total inorganc carbon
-    inorganic_carbon_total = models.IntegerField("% total inorganc carbon")
+    inorganic_carbon_total = models.IntegerField("% total inorganc carbon", null=True, blank=True)
     #light intensity (lux)
-    flux = models.IntegerField("Light intensity (lux)")
+    flux = models.IntegerField("Light intensity (lux)", null=True, blank=True)
 
     class Meta:
         verbose_name = 'Pelagic marine Contextual Data'
 
     def __str__(self):
-        return "{} Pelagic Contextual Data" .format( self.extraction_id)
+        return "{} Pelagic Contextual Data" .format( self.bpa_id)
