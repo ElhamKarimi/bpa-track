@@ -46,7 +46,6 @@ class AmpliconResource(CommonAmpliconResource):
 class AmpliconAdmin(CommonAmpliconAdmin):
     resource_class = AmpliconResource
 
-
 # Metagenomic
 class MetagenomicResource(CommonMetagenomicResource):
     class Meta(CommonMetagenomicResource.Meta):
@@ -54,7 +53,6 @@ class MetagenomicResource(CommonMetagenomicResource):
 
 class MetagenomicAdmin(CommonMetagenomicAdmin):
     resource_class = MetagenomicResource
-
 
 class SampleReceivedResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')

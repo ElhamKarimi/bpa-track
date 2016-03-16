@@ -38,14 +38,15 @@ class SampleStateTrack(models.Model):
         return "{}" .format( self.extraction_id)
 
 class ContextualPelagic(models.Model):
-    
+    """ Pelagic """
+
     #BPA_ID
     bpa_id = models.IntegerField('BPA ID', primary_key=True)
     #Date sampled (Y-M-D)
     date_sampled = models.DateField("Date Sampled")
     #Time sampled (hh:mm)
     time_sampled = models.TimeField("Time Sampled")
-    # replace with geodjango
+    # replace with geo django
     #lat (decimal degrees)
     lat = models.DecimalField("Latitude", max_digits=9, decimal_places=6)
     #long (decimal degrees)
@@ -98,7 +99,6 @@ class ContextualPelagic(models.Model):
 
     def __str__(self):
         return "{} Pelagic Contextual Data".format( self.bpa_id)
-
 
 class ContextualOpenWater(models.Model):
     

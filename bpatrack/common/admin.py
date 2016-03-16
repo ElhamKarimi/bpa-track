@@ -23,14 +23,12 @@ class FacilityWidget(widgets.ForeignKeyWidget):
         facility, _ = self.model.objects.get_or_create(name=value)
         return facility
 
-
 @admin.register(Facility)
 class FacilityAdmin(admin.ModelAdmin):
     list_display = (
             'name',
             'note'
             )
-
 
 class DateField(fields.Field):
     """
@@ -43,7 +41,6 @@ class DateField(fields.Field):
 
     def clean(self, data):
         return date_parser(data[self.column_name])
-
 
 # Amplicon
 class CommonAmpliconResource(resources.ModelResource):
@@ -72,7 +69,6 @@ class CommonAmpliconAdmin(ImportExportModelAdmin):
     list_filter = ('facility', 'target', )
     search_fields = ('extraction_id', 'facility__name', 'target', 'comments')
 
-
 # Metagenomics
 class CommonMetagenomicResource(resources.ModelResource):
     extraction_id = fields.Field(attribute='extraction_id', column_name='Sample extraction ID')
@@ -97,7 +93,6 @@ class CommonMetagenomicAdmin(ImportExportModelAdmin):
     list_filter = ('facility',)
     search_fields = ('extraction_id', 'facility__name', 'comments')
 
-
 # TransferLog
 class CommonTransferLogResource(resources.ModelResource):
     facility = fields.Field(
@@ -121,7 +116,6 @@ class CommonTransferLogResource(resources.ModelResource):
     class Meta:
         abstract = True
         import_id_fields = ('folder_name', )
-
 
 class CommonTransferLogAdmin(ImportExportModelAdmin):
 
@@ -174,7 +168,6 @@ class CommonTransferLogAdmin(ImportExportModelAdmin):
             'ticket_url',
             'downloads_url'
             )
-
 
 class CommonDataSetAdmin(ImportExportModelAdmin):
     date_hierarchy = 'transfer_to_archive_date'
