@@ -10,6 +10,7 @@ from bpatrack.common.models import (
 
 class MarineCommon(models.Model):
     """ Marine Common """
+
     sample_type = "UNSET"
     # BPA_ID
     bpa_id = models.IntegerField('BPA ID', primary_key=True)
@@ -273,15 +274,16 @@ class SeaWeed(CoralWeedGrassCommon):
     sample_type = "SeaWeed"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name = "Seaweed Metadata"
+        verbose_name = "Seaweed Contextual Data"
         verbose_name_plural = verbose_name
+
 
 class SeaGrass(CoralWeedGrassCommon):
     """ SeaGrass """
     sample_type = "SeaGrass"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name = "Sea Grass Metadata"
+        verbose_name = "Sea Grass Contextual Data"
         verbose_name_plural = verbose_name
 
 
@@ -290,5 +292,25 @@ class Coral(CoralWeedGrassCommon):
     sample_type = "Coral"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name = "Coral Metadata"
+        verbose_name = "Coral Contextual Data"
+        verbose_name_plural = verbose_name
+
+
+class Sediment(MarineCommon):
+    sample_type = "Sediment"
+
+    # Host Species (Coastal samples only)
+    host_species = models.TextField("Host Species", null=True, blank=True)
+
+    # %total carbon
+    # % fine sediment
+    # % total nitrogen
+    # % total phosphorous
+    # sedimentation rate (g /(cm2 x y)r)
+
+
+
+
+    class Meta(CoralWeedGrassCommon.Meta):
+        verbose_name = "Sediment Contextual Data"
         verbose_name_plural = verbose_name
