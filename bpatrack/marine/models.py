@@ -10,7 +10,6 @@ from bpatrack.common.models import (
 
 class MarineCommon(models.Model):
     """ Marine Common """
-
     sample_type = "UNSET"
     # BPA_ID
     bpa_id = models.IntegerField('BPA ID', primary_key=True)
@@ -274,15 +273,16 @@ class SeaWeed(CoralWeedGrassCommon):
     sample_type = "SeaWeed"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name_plural = "Seaweed Metadata"
-
+        verbose_name = "Seaweed Metadata"
+        verbose_name_plural = verbose_name
 
 class SeaGrass(CoralWeedGrassCommon):
     """ SeaGrass """
     sample_type = "SeaGrass"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name_plural = "Sea Grass Metadata"
+        verbose_name = "Sea Grass Metadata"
+        verbose_name_plural = verbose_name
 
 
 class Coral(CoralWeedGrassCommon):
@@ -290,4 +290,5 @@ class Coral(CoralWeedGrassCommon):
     sample_type = "Coral"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name_plural = "Coral Metadata"
+        verbose_name = "Coral Metadata"
+        verbose_name_plural = verbose_name
