@@ -75,6 +75,7 @@ class SampleStateTrackAdmin(ImportExportModelAdmin):
             'full_contextual_data_received'
             )
 
+# Pelagic
 class ContextualPelagicResource(resources.ModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
@@ -158,6 +159,7 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
                 }),
             )
 
+# Open Water
 class ContextualOpenWaterAdmin(ImportExportModelAdmin):
     list_display = (
             'bpa_id',
