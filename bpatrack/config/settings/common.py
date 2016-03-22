@@ -46,8 +46,8 @@ THIRD_PARTY_APPS = (
     'allauth.socialaccount',  # registration
     'import_export',
     'kombu.transport.django',
-    'djcelery',
-    'dynamic_scraper',
+    # 'djcelery',
+    # 'dynamic_scraper',
 )
 
 # Apps specific for this project go here.
