@@ -33,7 +33,7 @@ class MarineCommon(models.Model):
         abstract = True
 
     def __str__(self):
-        return "{} {}".format(self.extraction_id, self.sample_type)
+        return "{} {}".format(self.bpa_id, self.sample_type)
 
 
 class TransferLog(TransferLog):
