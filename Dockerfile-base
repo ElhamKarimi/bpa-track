@@ -23,6 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libxml2 \
   libxslt1.1 \
   imagemagick \
+  binutils \
+  libproj-dev \
+  gdal-bin \
+  postgis* \ 
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 RUN env --unset=DEBIAN_FRONTEND
 
