@@ -283,7 +283,7 @@ class SeaGrass(CoralWeedGrassCommon):
     sample_type = "SeaGrass"
 
     class Meta(CoralWeedGrassCommon.Meta):
-        verbose_name = "Sea Grass Contextual Data"
+        verbose_name = "Seagrass Contextual Data"
         verbose_name_plural = verbose_name
 
 
@@ -301,16 +301,31 @@ class Sediment(MarineCommon):
 
     # Host Species (Coastal samples only)
     host_species = models.TextField("Host Species", null=True, blank=True)
-
     # %total carbon
+    carbon = models.DecimalField("% total carbon", max_digits=5, decimal_places=2, null=True, blank=True)
     # % fine sediment
+    sediment  = models.DecimalField("% fine sediment", max_digits=5, decimal_places=2, null=True, blank=True)
     # % total nitrogen
+    nitrogen = models.DecimalField("% total nitrogen", max_digits=5, decimal_places=2, null=True, blank=True)
     # % total phosphorous
+    phosphorous = models.DecimalField("% total phosphorous", max_digits=5, decimal_places=2, null=True, blank=True)
     # sedimentation rate (g /(cm2 x y)r)
-
-
-
+    sedimentation_rate = models.DecimalField("sedimentation rate (g /(cm2 x y)r)", max_digits=5, decimal_places=2, null=True, blank=True)
 
     class Meta(CoralWeedGrassCommon.Meta):
         verbose_name = "Sediment Contextual Data"
         verbose_name_plural = verbose_name
+
+
+class Sponge(MarineCommon):
+    sample_type = "Sponge"
+
+    # host state (free text field)
+    host_state = models.TextField("Host State")
+    # host abundance (individuals per m2)
+    host_abundance = models.DecimalField("Host Abundance", max_digits=9, decimal_places=6)
+
+    class Meta(MarineCommon.Meta):
+        verbose_name = "Sponge Contextual Data"
+        verbose_name_plural = verbose_name
+

@@ -29,6 +29,8 @@ from .models import (
         SeaWeed,
         SeaGrass,
         Coral,
+        Sediment,
+        Sponge,
         )
 
 
@@ -290,8 +292,7 @@ class ContextualOpenWaterAdmin(ImportExportModelAdmin):
             )
 
 
-
-class CommonResource(resources.ModelResource):
+class MarineResource(resources.ModelResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
@@ -304,21 +305,44 @@ class CommonResource(resources.ModelResource):
     note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
 
+    class Meta:
+        import_id_fields = ('bpa_id', )
+
+
+# sediment
+class SedimentResource(MarineResource):
+
+    carbon = fields.Field(attribute="carbon", column_name="% total carbon")
+    sediment = fields.Field(attribute="sediment", column_name="% fine sediment")
+    nitrogen = fields.Field(attribute="nitrogen", column_name="% total nitrogen")
+    phosphorous = fields.Field(attribute="phosphorous", column_name="% total phosphorous")
+    sedimentation_rate = fields.Field(attribute="sedimentation_rate", column_name="sedimentation rate (g /(cm2 x y)r)")
+
+
+class SpongeResource(MarineResource):
+
+    host_state = fields.Field(attribute="host_state", column_name="host state (free text field)")
+    host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)")
+
+
+class CommonResource(MarineResource):
+    """ SeaWeed, Coral and SeaGrass common resource """
+
     pam = fields.Field(attribute="pam", column_name="Pulse amplitude modulated (PAM)")
     fluoro = fields.Field(attribute="fluoro", column_name="Fluorometer Measurement")
     host_state = fields.Field(attribute="host_state", column_name="Host State")
     host_abundance = fields.Field(attribute="host_abundance", column_name="Host Abundance")
 
-    class Meta:
-        import_id_fields = ('bpa_id', )
 
 class CoralResource(CommonResource):
     class Meta(CommonResource.Meta):
         model = Coral
 
+
 class SeaGrassResource(CommonResource):
     class Meta(CommonResource.Meta):
         model = SeaGrass
+
 
 class SeaWeedResource(CommonResource):
     class Meta(CommonResource.Meta):
@@ -343,11 +367,22 @@ class CommonAdmin(ImportExportModelAdmin):
             'dept'
             )
 
+
+class SedimentAdmin(CommonAdmin):
+    resource_class = SedimentResource
+
+
+class SpongeAdmin(CommonAdmin):
+    resource_class = SpongeResource
+
+
 class CoralAdmin(CommonAdmin):
     resource_class = CoralResource
 
+
 class SeaWeedAdmin(CommonAdmin):
     resource_class = SeaWeedResource
+
 
 class SeaGrassAdmin(CommonAdmin):
     resource_class = SeaGrassResource
@@ -363,4 +398,6 @@ admin.site.register(ContextualOpenWater, ContextualOpenWaterAdmin)
 admin.site.register(SeaWeed, SeaWeedAdmin)
 admin.site.register(SeaGrass, SeaGrassAdmin)
 admin.site.register(Coral, CoralAdmin)
+admin.site.register(Sediment, SedimentAdmin)
+admin.site.register(Sponge, SpongeAdmin)
 
