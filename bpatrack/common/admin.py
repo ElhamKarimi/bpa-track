@@ -1,6 +1,7 @@
 
 from dateutil.parser import parse as date_parser
 from django.contrib import admin
+from django.contrib.gis.admin import OSMGeoAdmin
 from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin
@@ -11,7 +12,8 @@ from .models import (
         Facility,
         Amplicon,
         Metagenomic,
-        TransferLog
+        TransferLog,
+        Site,
         )
 
 class FacilityWidget(widgets.ForeignKeyWidget):
@@ -182,3 +184,16 @@ class CommonDataSetAdmin(ImportExportModelAdmin):
 
     list_filter = ('facility',)
     search_fields = ('facility__name', 'comments', )
+
+class SiteAdmin(OSMGeoAdmin):
+
+    list_display = (
+            'point',
+            'location_description',
+            'dept',
+            'note')
+
+    list_filter = ('point', 'location_description', 'dept', 'note')
+    search_fields = ('point', 'location_description', )
+
+admin.site.register(Site, SiteAdmin)

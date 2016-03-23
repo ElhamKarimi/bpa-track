@@ -1,5 +1,18 @@
-from django.db import models
+from django.contrib.gis.db import models
 
+class Site(models.Model):
+    """ A site """
+
+    point = models.PointField("Position")
+    #Depth (m)
+    dept = models.IntegerField('Depth')
+    # Notes
+    note = models.TextField("Note", null=True, blank=True)
+    # Location description
+    location_description = models.TextField("Location Description")
+
+    def __str__(self):
+        return '{} {}'.format(self.point, self.location_description)
 
 class Facility(models.Model):
     """ The Sequencing Facility """

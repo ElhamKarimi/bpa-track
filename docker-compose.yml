@@ -5,7 +5,8 @@ datadev:
     - ./data/dev:/data
 
 db:
-  image: postgres:9.5
+  build: .
+  dockerfile: Dockerfile-postgis
   environment:
     - POSTGRES_USER=webapp
     - POSTGRES_PASSWORD=webapp
