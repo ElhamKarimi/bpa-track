@@ -1,15 +1,19 @@
 from django.contrib.gis.db import models
+from autoslug import AutoSlugField
 
 class Site(models.Model):
     """ A site """
 
-    point = models.PointField("Position")
+    point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
     #Depth (m)
-    dept = models.IntegerField('Depth')
+    depth = models.IntegerField('Depth')
     # Notes
     note = models.TextField("Note", null=True, blank=True)
     # Location description
     location_description = models.TextField("Location Description")
+
+    slug = AutoSlugField(populate_from='point', unique=True, max_length=255)
+
 
     def __str__(self):
         return '{} {}'.format(self.point, self.location_description)

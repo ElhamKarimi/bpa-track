@@ -4,7 +4,8 @@ from django.contrib import admin
 from django.contrib.gis.admin import OSMGeoAdmin
 from django.utils.html import format_html
 from import_export import resources, fields, widgets
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
+
 
 JIRA_URL = "https://ccgmurdoch.atlassian.net/projects/BRLOPS/issues/"
 
@@ -185,15 +186,30 @@ class CommonDataSetAdmin(ImportExportModelAdmin):
     list_filter = ('facility',)
     search_fields = ('facility__name', 'comments', )
 
-class SiteAdmin(OSMGeoAdmin):
+class SiteResource(resources.ModelResource):
+
+    location_description = fields.Field('location_description', column_name='Location Description')
+    depth = fields.Field(attribute='depth', column_name='Depth (m)')
+    note = fields.Field(attribute='note', column_name='Notes')
+
+    class Meta:
+        model = Site
+        import_id_fields = ('location_description', )
+        exclude = ('slug', )
+
+
+class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
+    resource_class = SiteResource
 
     list_display = (
             'point',
             'location_description',
-            'dept',
+            'depth',
             'note')
 
-    list_filter = ('point', 'location_description', 'dept', 'note')
+    fields = list_display
+
+    list_filter = ('location_description', 'depth', 'note')
     search_fields = ('point', 'location_description', )
 
 admin.site.register(Site, SiteAdmin)
