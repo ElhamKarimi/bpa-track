@@ -2,6 +2,7 @@
 from dateutil.parser import parse as date_parser
 from django.contrib import admin
 from django.contrib.gis.admin import OSMGeoAdmin
+from django.contrib.gis.geos import GEOSGeometry, Point
 from django.utils.html import format_html
 from import_export import resources, fields, widgets
 from import_export.admin import ImportExportModelAdmin, ImportExportActionModelAdmin
@@ -187,19 +188,39 @@ class CommonDataSetAdmin(ImportExportModelAdmin):
     search_fields = ('facility__name', 'comments', )
 
 class SiteResource(resources.ModelResource):
+    """
+    Maps sites file to object. SItes file does not come with WKT strings
+    it ships with lat/lon columns
+    """
 
-    location_description = fields.Field('location_description', column_name='Location Description')
+    # these are in the model
+    point = fields.Field(attribute='point')
+    location_description = fields.Field('location_description', column_name='Location description')
     depth = fields.Field(attribute='depth', column_name='Depth (m)')
     note = fields.Field(attribute='note', column_name='Notes')
+
+    # these come from the file, they will be converted to a point 
+    lat = fields.Field(column_name='lat (decimal degrees)')
+    lon = fields.Field(column_name='long (decimal degrees)')
+
+    def before_import(self, dataset, dry_run, **kwargs):
+        for e in dataset:
+            print(e)
 
     class Meta:
         model = Site
         import_id_fields = ('location_description', )
-        exclude = ('slug', )
+        exclude = ('slug', 'point')
 
 
 class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SiteResource
+    
+    default_zoom = 4 
+    center = Point((134.0, -26.0), srid=4326)
+    center.transform(3857)
+    default_lon = center.x
+    default_lat = center.y
 
     list_display = (
             'point',

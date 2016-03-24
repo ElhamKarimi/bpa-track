@@ -4,13 +4,13 @@ from autoslug import AutoSlugField
 class Site(models.Model):
     """ A site """
 
+    # Location description
+    location_description = models.TextField("Location Description", primary_key=True)
     point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
     #Depth (m)
     depth = models.IntegerField('Depth')
     # Notes
     note = models.TextField("Note", null=True, blank=True)
-    # Location description
-    location_description = models.TextField("Location Description")
 
     slug = AutoSlugField(populate_from='point', unique=True, max_length=255)
 
