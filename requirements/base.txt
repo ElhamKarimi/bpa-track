@@ -42,3 +42,6 @@ uwsgi==2.0.12
 django_mailgun==0.8.0
 django-celery==3.1.17
 django-dynamic-scraper==0.10
+
+django-grappelli
+django-reversion

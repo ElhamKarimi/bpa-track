@@ -6,17 +6,21 @@ class Site(models.Model):
 
     # Location description
     location_description = models.TextField("Location Description", primary_key=True)
+    # 
     point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
-    #Depth (m)
+    # Depth (m)
     depth = models.IntegerField('Depth')
     # Notes
     note = models.TextField("Note", null=True, blank=True)
 
-    slug = AutoSlugField(populate_from='point', unique=True, max_length=255)
+    slug = AutoSlugField(populate_from='location_description', unique=True, max_length=255)
 
+    def point_description(self):
+        return '{:.4f} {:.4f}'.format(self.point.x, self.point.y)
 
     def __str__(self):
-        return '{} {}'.format(self.point, self.location_description)
+        return '{} ({:.4f} {:.4f})'.format(self.location_description, self.point.x, self.point.y)
+
 
 class Facility(models.Model):
     """ The Sequencing Facility """

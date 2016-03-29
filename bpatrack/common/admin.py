@@ -187,9 +187,10 @@ class CommonDataSetAdmin(ImportExportModelAdmin):
     list_filter = ('facility',)
     search_fields = ('facility__name', 'comments', )
 
+# Site
 class SiteResource(resources.ModelResource):
     """
-    Maps sites file to object. SItes file does not come with WKT strings
+    Maps sites file to object. Sites file does not come with WKT strings
     it ships with lat/lon columns
     """
 
@@ -199,38 +200,43 @@ class SiteResource(resources.ModelResource):
     depth = fields.Field(attribute='depth', column_name='Depth (m)')
     note = fields.Field(attribute='note', column_name='Notes')
 
-    # these come from the file, they will be converted to a point 
-    lat = fields.Field(column_name='lat (decimal degrees)')
-    lon = fields.Field(column_name='long (decimal degrees)')
+    # these come from the file, they will be converted to a point
+    lat = fields.Field(attribute='lat', column_name='lat (decimal degrees)')
+    lon = fields.Field(attribute='lon', column_name='long (decimal degrees)')
 
     def before_import(self, dataset, dry_run, **kwargs):
         for e in dataset:
             print(e)
 
+    def before_save_instance(self, instance, dry_run):
+        instance.point = Point(30, 40)
+
     class Meta:
         model = Site
         import_id_fields = ('location_description', )
-        exclude = ('slug', 'point')
-
+        exclude = ('slug', 'point', )
 
 class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SiteResource
-    
-    default_zoom = 4 
+    default_zoom = 4
     center = Point((134.0, -26.0), srid=4326)
     center.transform(3857)
     default_lon = center.x
     default_lat = center.y
 
     list_display = (
+            'location_description',
+            'depth',
+            'point_description',
+            'note')
+
+    fields = (
             'point',
             'location_description',
             'depth',
             'note')
 
-    fields = list_display
-
-    list_filter = ('location_description', 'depth', 'note')
-    search_fields = ('point', 'location_description', )
+    list_filter = ('location_description', 'depth', )
+    search_fields = ('location_description', )
 
 admin.site.register(Site, SiteAdmin)

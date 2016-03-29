@@ -29,6 +29,8 @@ class MarineCommon(models.Model):
     # Location description
     location_description = models.TextField("Location Description")
 
+
+
     class Meta:
         abstract = True
 
