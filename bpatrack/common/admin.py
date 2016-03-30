@@ -204,12 +204,9 @@ class SiteResource(resources.ModelResource):
     lat = fields.Field(attribute='lat', column_name='lat (decimal degrees)')
     lon = fields.Field(attribute='lon', column_name='long (decimal degrees)')
 
-    def before_import(self, dataset, dry_run, **kwargs):
-        for e in dataset:
-            print(e)
 
     def before_save_instance(self, instance, dry_run):
-        instance.point = Point(30, 40)
+        instance.point = Point(float(instance.lon), float(instance.lat))
 
     class Meta:
         model = Site
