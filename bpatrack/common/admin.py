@@ -18,6 +18,7 @@ from .models import (
         Site,
         )
 
+
 class FacilityWidget(widgets.ForeignKeyWidget):
     def __init__(self):
         self.model = Facility
@@ -195,7 +196,6 @@ class SiteResource(resources.ModelResource):
     """
 
     # these are in the model
-    point = fields.Field(attribute='point')
     location_description = fields.Field('location_description', column_name='Location description')
     depth = fields.Field(attribute='depth', column_name='Depth (m)')
     note = fields.Field(attribute='note', column_name='Notes')
@@ -204,14 +204,25 @@ class SiteResource(resources.ModelResource):
     lat = fields.Field(attribute='lat', column_name='lat (decimal degrees)')
     lon = fields.Field(attribute='lon', column_name='long (decimal degrees)')
 
+    def before_save_instance(self, site, dry_run):
+        site.point = Point(float(site.lon), float(site.lat))
 
-    def before_save_instance(self, instance, dry_run):
-        instance.point = Point(float(instance.lon), float(instance.lat))
+    def dehydrate_lat(self, site):
+        return site.point.x
+
+    def dehydrate_lon(self, site):
+        return site.point.y
 
     class Meta:
         model = Site
         import_id_fields = ('location_description', )
-        exclude = ('slug', 'point', )
+        export_order = ('location_description', 
+                        'depth',
+                        'lat',
+                        'lon',
+                        'note',
+                        'point',
+                        )
 
 class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmin):
     resource_class = SiteResource
