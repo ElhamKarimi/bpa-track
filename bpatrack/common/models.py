@@ -6,10 +6,8 @@ class Site(models.Model):
 
     # Location description
     location_description = models.TextField("Location Description", primary_key=True)
-    # 
+    # position
     point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
-    # Depth (m)
-    depth = models.IntegerField('Depth')
     # Notes
     note = models.TextField("Note", null=True, blank=True)
 

@@ -197,7 +197,6 @@ class SiteResource(resources.ModelResource):
 
     # these are in the model
     location_description = fields.Field('location_description', column_name='Location description')
-    depth = fields.Field(attribute='depth', column_name='Depth (m)')
     note = fields.Field(attribute='note', column_name='Notes')
 
     # these come from the file, they will be converted to a point
@@ -217,7 +216,6 @@ class SiteResource(resources.ModelResource):
         model = Site
         import_id_fields = ('location_description', )
         export_order = ('location_description', 
-                        'depth',
                         'lat',
                         'lon',
                         'note',
@@ -234,17 +232,15 @@ class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmi
 
     list_display = (
             'location_description',
-            'depth',
             'point_description',
             'note')
 
     fields = (
             'point',
             'location_description',
-            'depth',
             'note')
 
-    list_filter = ('location_description', 'depth', )
+    list_filter = ('location_description', )
     search_fields = ('location_description', )
 
 admin.site.register(Site, SiteAdmin)
