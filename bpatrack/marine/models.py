@@ -5,6 +5,7 @@ from bpatrack.common.models import (
         TransferLog,
         Amplicon,
         Metagenomic,
+        Site,
         )
 
 
@@ -29,7 +30,7 @@ class MarineCommon(models.Model):
     # Location description
     location_description = models.TextField("Location Description")
 
-
+    site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         abstract = True

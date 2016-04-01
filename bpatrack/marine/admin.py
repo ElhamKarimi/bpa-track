@@ -7,7 +7,12 @@ from import_export.admin import ImportExportModelAdmin
 from bpatrack.users.models import User
 from bpatrack.users.admin import UserWidget
 
-from bpatrack.common.models import Facility
+from bpatrack.common.models import (
+        Facility,
+        Site,
+        )
+
+
 from bpatrack.common.admin import (
         FacilityWidget,
         DateField,
@@ -138,6 +143,7 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
             'lon',
             'dept',
             'location_description',
+            'site',
             'host_species',
             )
 
