@@ -13,8 +13,20 @@ class Site(models.Model):
 
     slug = AutoSlugField(populate_from='location_description', unique=True, max_length=255)
 
+    @classmethod
+    def create(cls, lat, lon, description):
+        point = models.Point(lat, lon)
+        site = cls(location_description=description, point=point)
+        return site
+    
     def point_description(self):
         return '{:.4f} {:.4f}'.format(self.point.x, self.point.y)
+
+    def get_lat(self):
+        return point.x
+
+    def get_lon(self):
+        return point.y
 
     def __str__(self):
         return '{} ({:.4f} {:.4f})'.format(self.location_description, self.point.x, self.point.y)

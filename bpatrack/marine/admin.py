@@ -91,17 +91,34 @@ class SampleStateTrackAdmin(ImportExportModelAdmin):
             'full_contextual_data_received'
             )
 
+class CommonWaterResource(resources.ModelResource):
+
+    def before_save_instance(self, contextual, dry_run):
+        contextual.site = Site.create(
+            lat=contextual.lat,
+            lon=contextual.lat,
+            location_description=contextual.location_description,
+        )
+
+    def dehydrate_lat(self, site):
+        return site.get_lat()
+
+    def dehydrate_lon(self, site):
+        return site.get_lon()
 
 # Pelagic
-class ContextualPelagicResource(resources.ModelResource):
+class ContextualPelagicResource(CommonWaterResource):
+
+    # site 
+    lat = fields.Field(attribute="lat", column_name="Latitude")
+    lon = fields.Field(attribute="lon", column_name="Longitude")
+    location_description = fields.Field(attribute="location_description", column_name="Location Description")
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
     time_sampled = DateField(attribute="time_sampled", column_name="Time Sampled")
-    lat = fields.Field(attribute="lat", column_name="Latitude")
-    lon = fields.Field(attribute="lon", column_name="Longitude")
+
     dept = fields.Field(attribute="dept", column_name="Dept")
-    location_description = fields.Field(attribute="location_description", column_name="Location Description")
     note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
     ph = fields.Field(attribute="ph", column_name="pH Level H20")
@@ -121,6 +138,8 @@ class ContextualPelagicResource(resources.ModelResource):
     carbon_total = fields.Field(attribute="carbon_total", column_name="% total carbon")
     inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon")
     flux = fields.Field(attribute="flux", column_name="Light intensity (lux)")
+
+
 
     class Meta:
         model = ContextualPelagic
