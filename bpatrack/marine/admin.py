@@ -132,17 +132,14 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
     list_display = (
             'bpa_id',
             'date_sampled',
-            'location_description',
+            'site',
             )
 
     _required = (
             'bpa_id',
             'date_sampled',
             'time_sampled',
-            'lat',
-            'lon',
             'dept',
-            'location_description',
             'site',
             'host_species',
             )
@@ -220,17 +217,15 @@ class ContextualOpenWaterAdmin(ImportExportModelAdmin):
     list_display = (
             'bpa_id',
             'date_sampled',
-            'location_description',
+            'site',
             )
 
     _required = (
             'bpa_id',
             'date_sampled',
             'time_sampled',
-            'lat',
-            'lon',
             'dept',
-            'location_description',
+            'site',
             'host_species',
             )
 
@@ -360,16 +355,14 @@ class CommonAdmin(ImportExportModelAdmin):
             'bpa_id',
             'date_sampled',
             'time_sampled',
-            'lat',
-            'lon',
+            'site',
             )
 
     list_filter = (
             'bpa_id',
             'date_sampled',
             'time_sampled',
-            'lat',
-            'lon',
+            'site',
             'dept'
             )
 

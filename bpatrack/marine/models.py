@@ -19,16 +19,10 @@ class MarineCommon(models.Model):
     date_sampled = models.DateField("Date Sampled")
     # Time sampled (hh:mm)
     time_sampled = models.TimeField("Time Sampled")
-    #lat (decimal degrees)
-    lat = models.DecimalField("Latitude", max_digits=9, decimal_places=6)
-    #long (decimal degrees)
-    lon = models.DecimalField("Longitude", max_digits=9, decimal_places=6)
-    #Depth (m)
+    # Depth (m)
     dept = models.IntegerField('Depth')
     # Notes
     note = models.TextField("Note", null=True, blank=True)
-    # Location description
-    location_description = models.TextField("Location Description")
 
     site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True)
 
