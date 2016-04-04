@@ -23,7 +23,7 @@ class MarineCommon(models.Model):
     dept = models.IntegerField('Depth')
     # Notes
     note = models.TextField("Note", null=True, blank=True)
-
+    # Sample site
     site = models.ForeignKey(Site, on_delete=models.SET_NULL, null=True)
 
     class Meta:
