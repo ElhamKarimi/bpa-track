@@ -23,10 +23,10 @@ class Site(models.Model):
         return '{:.4f} {:.4f}'.format(self.point.x, self.point.y)
 
     def get_lat(self):
-        return point.x
+        return self.point.x
 
     def get_lon(self):
-        return point.y
+        return self.point.y
 
     def __str__(self):
         return '{} ({:.4f} {:.4f})'.format(self.location_description, self.point.x, self.point.y)

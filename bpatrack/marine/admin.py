@@ -93,6 +93,23 @@ class SampleStateTrackAdmin(ImportExportModelAdmin):
 
 class CommonWaterResource(resources.ModelResource):
 
+    bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
+
+    # site 
+    lat = fields.Field(attribute="lat", column_name="Latitude")
+    lon = fields.Field(attribute="lon", column_name="Longitude")
+    location_description = fields.Field(attribute="location_description", column_name="Location Description")
+
+    date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
+
+    time_sampled = fields.Field(
+        widget=widgets.TimeWidget(), 
+        attribute="time_sampled",
+        column_name="Time Sampled")
+
+    dept = fields.Field(attribute="dept", column_name="Dept")
+    note = fields.Field(attribute="note", column_name="Note")
+
     def before_save_instance(self, contextual, dry_run):
         contextual.site = Site.create(
             lat=contextual.lat,
@@ -100,26 +117,15 @@ class CommonWaterResource(resources.ModelResource):
             location_description=contextual.location_description,
         )
 
-    def dehydrate_lat(self, site):
-        return site.get_lat()
+    def dehydrate_lat(self, context):
+        return context.site.get_lat()
 
-    def dehydrate_lon(self, site):
-        return site.get_lon()
+    def dehydrate_lon(self, context):
+        return context.site.get_lon()
 
 # Pelagic
 class ContextualPelagicResource(CommonWaterResource):
 
-    # site 
-    lat = fields.Field(attribute="lat", column_name="Latitude")
-    lon = fields.Field(attribute="lon", column_name="Longitude")
-    location_description = fields.Field(attribute="location_description", column_name="Location Description")
-
-    bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
-    date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
-    time_sampled = DateField(attribute="time_sampled", column_name="Time Sampled")
-
-    dept = fields.Field(attribute="dept", column_name="Dept")
-    note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
     ph = fields.Field(attribute="ph", column_name="pH Level H20")
     oxygen = fields.Field(attribute="oxygen", column_name="Oxygen (μmol/L) Lab")
@@ -139,12 +145,36 @@ class ContextualPelagicResource(CommonWaterResource):
     inorganic_carbon_total = fields.Field(attribute="inorganic_carbon_total", column_name="% total inorganc carbon")
     flux = fields.Field(attribute="flux", column_name="Light intensity (lux)")
 
-
-
     class Meta:
         model = ContextualPelagic
         import_id_fields = ('bpa_id', )
 
+        export_order = ('bpa_id',
+                        'site',
+                        'lat',
+                        'lon',
+                        'date_sampled',
+                        'time_sampled',
+                        'note',
+                        'host_species',
+                        'ph',
+                        'oxygen',
+                        'oxygen_ctd',
+                        'nitrate',
+                        'phosphate',
+                        'ammonium',
+                        'co2_total',
+                        'alkalinity_total',
+                        'temperature',
+                        'conductivity',
+                        'turbitity',
+                        'salinity',
+                        'microbial_abandance',
+                        'chlorophyl',
+                        'carbon_total',
+                        'inorganic_carbon_total',
+                        'flux'
+                        )
 
 class ContextualPelagicAdmin(ImportExportModelAdmin):
     resource_class = ContextualPelagicResource
@@ -196,16 +226,8 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
 
 
 # Open Water
-class ContextualOpenWaterResource(resources.ModelResource):
+class ContextualOpenWaterResource(CommonWaterResource):
 
-    bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
-    date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
-    time_sampled = DateField(attribute="time_sampled", column_name="Time Sampled")
-    lat = fields.Field(attribute="lat", column_name="Latitude")
-    lon = fields.Field(attribute="lon", column_name="Longitude")
-    dept = fields.Field(attribute="dept", column_name="Dept")
-    location_description = fields.Field(attribute="location_description", column_name="Location Description")
-    note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
     ph = fields.Field(attribute="ph", column_name="pH Level H20")
     oxygen = fields.Field(attribute="oxygen", column_name="Oxygen (μmol/L) Lab")
@@ -317,7 +339,12 @@ class MarineResource(resources.ModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
-    time_sampled = DateField(attribute="time_sampled", column_name="Time Sampled")
+
+    time_sampled = fields.Field(
+        widget=widgets.TimeWidget(format="%H:%M"), 
+        attribute="time_sampled", 
+        column_name="Time Sampled")
+
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
     dept = fields.Field(attribute="dept", column_name="Dept")
