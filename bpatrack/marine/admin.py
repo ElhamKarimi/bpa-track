@@ -114,8 +114,9 @@ class CommonWaterResource(resources.ModelResource):
         contextual.site = Site.create(
             lat=contextual.lat,
             lon=contextual.lat,
-            location_description=contextual.location_description,
+            description=contextual.location_description,
         )
+        print(contextual)
 
     def dehydrate_lat(self, context):
         return context.site.get_lat()
@@ -150,7 +151,6 @@ class ContextualPelagicResource(CommonWaterResource):
         import_id_fields = ('bpa_id', )
 
         export_order = ('bpa_id',
-                        'site',
                         'lat',
                         'lon',
                         'date_sampled',

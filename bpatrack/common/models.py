@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 from autoslug import AutoSlugField
 
 class Site(models.Model):
@@ -15,7 +16,7 @@ class Site(models.Model):
 
     @classmethod
     def create(cls, lat, lon, description):
-        point = models.Point(lat, lon)
+        point = Point(lat, lon)
         site = cls(location_description=description, point=point)
         return site
     
