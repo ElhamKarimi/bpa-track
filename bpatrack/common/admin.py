@@ -28,6 +28,19 @@ class FacilityWidget(widgets.ForeignKeyWidget):
         facility, _ = self.model.objects.get_or_create(name=value)
         return facility
 
+class SiteWidget(widgets.ForeignKeyWidget):
+    def __init__(self):
+        self.model = Site
+        self.field = "location_description"
+
+    def clean(self):
+        point = Point(lat, lon)
+        site, _ = self.model.objects.get_or_create(
+            location_description=description,
+            point=point)
+        print(site)
+        return site
+
 @admin.register(Facility)
 class FacilityAdmin(admin.ModelAdmin):
     list_display = (

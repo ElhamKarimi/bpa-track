@@ -15,6 +15,7 @@ from bpatrack.common.models import (
 
 from bpatrack.common.admin import (
         FacilityWidget,
+        SiteWidget,
         DateField,
         CommonAmpliconResource,
         CommonAmpliconAdmin,
@@ -95,34 +96,34 @@ class CommonWaterResource(resources.ModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
 
-    # site 
+    # site
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
     location_description = fields.Field(attribute="location_description", column_name="Location Description")
-
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
-
-    time_sampled = fields.Field(
-        widget=widgets.TimeWidget(), 
-        attribute="time_sampled",
-        column_name="Time Sampled")
-
+    time_sampled = fields.Field(widget=widgets.TimeWidget(), attribute="time_sampled", column_name="Time Sampled")
     dept = fields.Field(attribute="dept", column_name="Dept")
     note = fields.Field(attribute="note", column_name="Note")
 
-    def before_save_instance(self, contextual, dry_run):
+    site = fields.Field(attribute='site', widget=widgets.ForeignKeyWidget(Site))
+
+    def before_save_instance_xxxxx(self, contextual, dry_run):
         contextual.site = Site.create(
             lat=contextual.lat,
             lon=contextual.lat,
             description=contextual.location_description,
         )
-        print(contextual)
+        contextual.site.save()
 
-    def dehydrate_lat(self, context):
-        return context.site.get_lat()
+    def dehydrate_lat_xxx(self, context):
+        if context.site != None:
+            return context.site.get_lat()
+        return None
 
-    def dehydrate_lon(self, context):
-        return context.site.get_lon()
+    def dehydrate_lon_xxx(self, context):
+        if context.site != None:
+            return context.site.get_lon()
+        return None
 
 # Pelagic
 class ContextualPelagicResource(CommonWaterResource):

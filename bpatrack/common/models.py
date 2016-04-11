@@ -16,6 +16,8 @@ class Site(models.Model):
 
     @classmethod
     def create(cls, lat, lon, description):
+        lat = float(lat)
+        lon = float(lon)
         point = Point(lat, lon)
         site = cls(location_description=description, point=point)
         return site
