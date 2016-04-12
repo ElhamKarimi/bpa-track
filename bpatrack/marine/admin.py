@@ -16,6 +16,7 @@ from bpatrack.common.models import (
 from bpatrack.common.admin import (
         FacilityWidget,
         SiteWidget,
+        SiteField,
         DateField,
         CommonAmpliconResource,
         CommonAmpliconAdmin,
@@ -99,31 +100,14 @@ class CommonWaterResource(resources.ModelResource):
     # site
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
-    location_description = fields.Field(attribute="location_description", column_name="Location Description")
+    # location_description = fields.Field(attribute="location_description", column_name="Location Description")
+    site = SiteField(attribute="site", column_name="Location Description")
+
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
     time_sampled = fields.Field(widget=widgets.TimeWidget(), attribute="time_sampled", column_name="Time Sampled")
     dept = fields.Field(attribute="dept", column_name="Dept")
     note = fields.Field(attribute="note", column_name="Note")
 
-    site = fields.Field(attribute='site', widget=widgets.ForeignKeyWidget(Site))
-
-    def before_save_instance_xxxxx(self, contextual, dry_run):
-        contextual.site = Site.create(
-            lat=contextual.lat,
-            lon=contextual.lat,
-            description=contextual.location_description,
-        )
-        contextual.site.save()
-
-    def dehydrate_lat_xxx(self, context):
-        if context.site != None:
-            return context.site.get_lat()
-        return None
-
-    def dehydrate_lon_xxx(self, context):
-        if context.site != None:
-            return context.site.get_lon()
-        return None
 
 # Pelagic
 class ContextualPelagicResource(CommonWaterResource):
@@ -182,6 +166,7 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
     list_display = (
             'bpa_id',
             'date_sampled',
+            'time_sampled',
             'site',
             )
 

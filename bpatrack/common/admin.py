@@ -33,13 +33,39 @@ class SiteWidget(widgets.ForeignKeyWidget):
         self.model = Site
         self.field = "location_description"
 
-    def clean(self):
+    def clean(self, value):
+        point = Point(lat, lon)
+        site, _ = self.model.objects.get_or_create(location_description=value, point=point)
+        print(site)
+        return site
+
+class SiteField(fields.Field):
+    """
+    Sites may be imported from a variety of inputs.
+    Always create a site if it does not exist.
+    """
+
+    def __init__(self, *args, **kwargs):
+        # super(SiteField, self).__init__(*args, **kwargs)
+        self.model = Site
+        self.column_name="Location Description"
+        self.widget = None
+        self.attribute = "site"
+        self.readonly = False
+
+    def clean(self, data):
+        print(data)
+        # description = data['Location Description']
+        description = "Fuck you"
+
+        lat = float(data['Latitude'])
+        lon = float(data['Longitude'])
         point = Point(lat, lon)
         site, _ = self.model.objects.get_or_create(
             location_description=description,
             point=point)
-        print(site)
         return site
+
 
 @admin.register(Facility)
 class FacilityAdmin(admin.ModelAdmin):

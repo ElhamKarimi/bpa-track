@@ -12,8 +12,6 @@ class Site(models.Model):
     # Notes
     note = models.TextField("Note", null=True, blank=True)
 
-    slug = AutoSlugField(populate_from='location_description', unique=True, max_length=255)
-
     @classmethod
     def create(cls, lat, lon, description):
         lat = float(lat)
