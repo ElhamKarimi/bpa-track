@@ -16,11 +16,11 @@ class MarineCommon(models.Model):
     # BPA_ID
     bpa_id = models.IntegerField('BPA ID', primary_key=True)
     # Date sampled (Y-M-D)
-    date_sampled = models.DateField("Date Sampled")
+    date_sampled = models.DateField("Date Sampled", null=True, blank=True)
     # Time sampled (hh:mm)
-    time_sampled = models.TimeField("Time Sampled")
+    time_sampled = models.TimeField("Time Sampled", null=True, blank=True)
     # Depth (m)
-    dept = models.IntegerField('Depth')
+    depth = models.IntegerField('Depth (m)', null=True, blank=True)
     # Notes
     note = models.TextField("Note", null=True, blank=True)
     # Sample site

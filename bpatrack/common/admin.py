@@ -28,44 +28,6 @@ class FacilityWidget(widgets.ForeignKeyWidget):
         facility, _ = self.model.objects.get_or_create(name=value)
         return facility
 
-class SiteWidget(widgets.ForeignKeyWidget):
-    def __init__(self):
-        self.model = Site
-        self.field = "location_description"
-
-    def clean(self, value):
-        point = Point(lat, lon)
-        site, _ = self.model.objects.get_or_create(location_description=value, point=point)
-        print(site)
-        return site
-
-class SiteField(fields.Field):
-    """
-    Sites may be imported from a variety of inputs.
-    Always create a site if it does not exist.
-    """
-
-    def __init__(self, *args, **kwargs):
-        # super(SiteField, self).__init__(*args, **kwargs)
-        self.model = Site
-        self.column_name="Location Description"
-        self.widget = None
-        self.attribute = "site"
-        self.readonly = False
-
-    def clean(self, data):
-        print(data)
-        # description = data['Location Description']
-        description = "Foo you"
-
-        lat = float(data['Latitude'])
-        lon = float(data['Longitude'])
-        point = Point(lat, lon)
-        site, _ = self.model.objects.get_or_create(
-            location_description=description,
-            point=point)
-        return site
-
 
 @admin.register(Facility)
 class FacilityAdmin(admin.ModelAdmin):
@@ -235,7 +197,7 @@ class SiteResource(resources.ModelResource):
     """
 
     # these are in the model
-    location_description = fields.Field('location_description', column_name='Location description')
+    name = fields.Field(attribute='name', column_name='Sample Site')
     note = fields.Field(attribute='note', column_name='Notes')
 
     # these come from the file, they will be converted to a point
@@ -253,8 +215,8 @@ class SiteResource(resources.ModelResource):
 
     class Meta:
         model = Site
-        import_id_fields = ('location_description', )
-        export_order = ('location_description', 
+        import_id_fields = ('name', )
+        export_order = ('name', 
                         'lat',
                         'lon',
                         'note',
@@ -270,16 +232,16 @@ class SiteAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin, OSMGeoAdmi
     default_lat = center.y
 
     list_display = (
-            'location_description',
+            'name',
             'point_description',
             'note')
 
     fields = (
             'point',
-            'location_description',
+            'name',
             'note')
 
-    list_filter = ('location_description', )
-    search_fields = ('location_description', )
+    list_filter = ('name', )
+    search_fields = ('name', )
 
 admin.site.register(Site, SiteAdmin)

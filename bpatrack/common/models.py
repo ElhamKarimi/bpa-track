@@ -5,8 +5,8 @@ from autoslug import AutoSlugField
 class Site(models.Model):
     """ A site """
 
-    # Location description
-    location_description = models.TextField("Location Description", blank=False, unique=True)
+    # Site name
+    name = models.TextField("Location Description", blank=False, unique=True)
     # position
     point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
     # Notes
@@ -17,7 +17,7 @@ class Site(models.Model):
         lat = float(lat)
         lon = float(lon)
         point = Point(lat, lon)
-        site = cls(location_description=site_name, point=point)
+        site = cls(name=site_name, point=point)
         return site
    
 
@@ -26,7 +26,7 @@ class Site(models.Model):
         lat = float(lat)
         lon = float(lon)
         point = Point(lat, lon)
-        site, _ = cls.objects.get_or_create(location_description=site_name, point=point)
+        site, _ = cls.objects.get_or_create(name=site_name, point=point)
         return site
 
     def point_description(self):
@@ -39,7 +39,7 @@ class Site(models.Model):
         return self.point.y
 
     def __str__(self):
-        return '{} ({:.4f} {:.4f})'.format(self.location_description, self.point.x, self.point.y)
+        return '{} ({:.4f} {:.4f})'.format(self.name, self.point.x, self.point.y)
 
     class Meta:
         verbose_name = "Sample Site"

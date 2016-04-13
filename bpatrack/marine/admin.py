@@ -15,8 +15,6 @@ from bpatrack.common.models import (
 
 from bpatrack.common.admin import (
         FacilityWidget,
-        SiteWidget,
-        SiteField,
         DateField,
         CommonAmpliconResource,
         CommonAmpliconAdmin,
@@ -70,7 +68,6 @@ class MetagenomicResource(CommonMetagenomicResource):
 class MetagenomicAdmin(CommonMetagenomicAdmin):
     resource_class = MetagenomicResource
 
-
 class SampleStateTrackAdmin(ImportExportModelAdmin):
     list_display = (
             'extraction_id',
@@ -99,6 +96,12 @@ class CommonWaterResource(resources.ModelResource):
 
     # these fields will be site-ified
     sample_site = fields.Field(attribute="sample_site", column_name="Sample Site")
+    #site = fields.Field(
+    #    attribute="site",
+    #    column_name="Sample Site",
+    #    widget=widgets.ForeignKeyWidget(Site, 'name')
+    #)
+
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
@@ -107,8 +110,9 @@ class CommonWaterResource(resources.ModelResource):
         attribute="time_sampled",
         column_name="Time Sampled"
     )
-    dept = fields.Field(attribute="dept", column_name="Dept")
+    depth = fields.Field(attribute="depth", column_name="Depth (m)")
     note = fields.Field(attribute="note", column_name="Note")
+
 
     def before_save_instance(self, instance, dry_run):
         """ set the site """
@@ -144,9 +148,7 @@ class ContextualPelagicResource(CommonWaterResource):
         import_id_fields = ('bpa_id', )
 
         export_order = ('bpa_id',
-                        'sample_site',
-                        'lat',
-                        'lon',
+                        'site',
                         'date_sampled',
                         'time_sampled',
                         'note',
@@ -183,7 +185,7 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
             'bpa_id',
             'date_sampled',
             'time_sampled',
-            'dept',
+            'depth',
             'site',
             'host_species',
             )
@@ -260,7 +262,7 @@ class ContextualOpenWaterAdmin(ImportExportModelAdmin):
             'bpa_id',
             'date_sampled',
             'time_sampled',
-            'dept',
+            'depth',
             'site',
             'host_species',
             )
@@ -342,7 +344,7 @@ class MarineResource(resources.ModelResource):
 
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
-    dept = fields.Field(attribute="dept", column_name="Dept")
+    depth = fields.Field(attribute="depth", column_name="Depth (m)")
     location_description = fields.Field(attribute="location_description", column_name="Location Description")
     note = fields.Field(attribute="note", column_name="Note")
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
@@ -404,7 +406,7 @@ class CommonAdmin(ImportExportModelAdmin):
             'date_sampled',
             'time_sampled',
             'site',
-            'dept'
+            'depth'
             )
 
 
