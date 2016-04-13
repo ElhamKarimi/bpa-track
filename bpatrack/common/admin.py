@@ -56,7 +56,7 @@ class SiteField(fields.Field):
     def clean(self, data):
         print(data)
         # description = data['Location Description']
-        description = "Fuck you"
+        description = "Foo you"
 
         lat = float(data['Latitude'])
         lon = float(data['Longitude'])

@@ -243,11 +243,11 @@ class ContextualPelagic(MarineCommon):
     flux = models.IntegerField("Light intensity (lux)", null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Pelagic marine Contextual Data'
+        verbose_name = 'Pelagic Contextual Data'
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return "{} Pelagic Contextual Data".format( self.bpa_id)
+        return "{} Pelagic Contextual Data".format(self.bpa_id)
 
 
 class CoralWeedGrassCommon(MarineCommon):

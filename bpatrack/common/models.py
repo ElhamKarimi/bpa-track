@@ -6,20 +6,29 @@ class Site(models.Model):
     """ A site """
 
     # Location description
-    location_description = models.TextField("Location Description", primary_key=True)
+    location_description = models.TextField("Location Description", blank=False, unique=True)
     # position
     point = models.PointField("Position", help_text="Represented as (longitude, latitude)")
     # Notes
     note = models.TextField("Note", null=True, blank=True)
 
     @classmethod
-    def create(cls, lat, lon, description):
+    def create(cls, lat, lon, site_name):
         lat = float(lat)
         lon = float(lon)
         point = Point(lat, lon)
-        site = cls(location_description=description, point=point)
+        site = cls(location_description=site_name, point=point)
         return site
-    
+   
+
+    @classmethod
+    def get_or_create(cls, lat, lon, site_name):
+        lat = float(lat)
+        lon = float(lon)
+        point = Point(lat, lon)
+        site, _ = cls.objects.get_or_create(location_description=site_name, point=point)
+        return site
+
     def point_description(self):
         return '{:.4f} {:.4f}'.format(self.point.x, self.point.y)
 
@@ -31,6 +40,10 @@ class Site(models.Model):
 
     def __str__(self):
         return '{} ({:.4f} {:.4f})'.format(self.location_description, self.point.x, self.point.y)
+
+    class Meta:
+        verbose_name = "Sample Site"
+        verbose_name_plural = "Sample Sites"
 
 
 class Facility(models.Model):

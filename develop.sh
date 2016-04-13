@@ -20,7 +20,7 @@ readonly VIRTUALENV="${TOPDIR}/virt_${PROJECT_NAME}"
 
 : ${DJANGO_MAILGUN_API_KEY:="NOTSET"}
 
-CMD_ENV="DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}"
+CMD_ENV="DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY} PYTHONUNBUFFERED=1"
 DOCKER_BUILD_OPTS=''
 DOCKER_ROUTE=''
 DOCKER_RUN_OPTS='-e PIP_INDEX_URL -e PIP_TRUSTED_HOST'
@@ -447,7 +447,7 @@ case $ACTION in
     docker exec -it ${PROJECT_NAME}_runserver_1 /bin/bash
     ;;
   admin)
-    docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh admin $2
+    docker exec -it ${PROJECT_NAME}_uwsgi_1 /app/docker-entrypoint.sh admin $2
     ;;
   superuser)
     docker exec -it ${PROJECT_NAME}_runserver_1 /app/docker-entrypoint.sh superuser

@@ -97,16 +97,24 @@ class CommonWaterResource(resources.ModelResource):
 
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
 
-    # site
+    # these fields will be site-ified
+    sample_site = fields.Field(attribute="sample_site", column_name="Sample Site")
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
-    # location_description = fields.Field(attribute="location_description", column_name="Location Description")
-    site = SiteField(attribute="site", column_name="Location Description")
-
     date_sampled = DateField(attribute="date_sampled", column_name="Date Sampled")
-    time_sampled = fields.Field(widget=widgets.TimeWidget(), attribute="time_sampled", column_name="Time Sampled")
+    time_sampled = fields.Field(
+        widget=widgets.TimeWidget(),
+        attribute="time_sampled",
+        column_name="Time Sampled"
+    )
     dept = fields.Field(attribute="dept", column_name="Dept")
     note = fields.Field(attribute="note", column_name="Note")
+
+    def before_save_instance(self, instance, dry_run):
+        """ set the site """
+
+        site = Site.get_or_create(instance.lat, instance.lon, instance.sample_site)
+        instance.site = site
 
 
 # Pelagic
@@ -136,6 +144,7 @@ class ContextualPelagicResource(CommonWaterResource):
         import_id_fields = ('bpa_id', )
 
         export_order = ('bpa_id',
+                        'sample_site',
                         'lat',
                         'lon',
                         'date_sampled',

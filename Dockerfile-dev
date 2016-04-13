@@ -18,6 +18,7 @@ ENV DEBUG 1
 ENV PIP_OPTS="--no-cache-dir"
 ENV PIP_INDEX_URL=ARG_PIP_INDEX_URL
 ENV PIP_TRUSTED_HOST=ARG_PIP_TRUSTED_HOST
+ENV PYTHONBUFFERED 1
 
 # For dev we use root so we can shell in and do evil things
 USER root
