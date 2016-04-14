@@ -95,12 +95,15 @@ class CommonWaterResource(resources.ModelResource):
     bpa_id = fields.Field(attribute="bpa_id", column_name="BPA_ID")
 
     # these fields will be site-ified
-    sample_site = fields.Field(attribute="sample_site", column_name="Sample Site")
-    #site = fields.Field(
-    #    attribute="site",
-    #    column_name="Sample Site",
-    #    widget=widgets.ForeignKeyWidget(Site, 'name')
-    #)
+    sample_site_name = fields.Field(attribute="sample_site_name", column_name="Sample Site")
+
+    # ignore during import
+    site = fields.Field(
+        readonly=True,
+        attribute="site",
+        column_name="Sample Site",
+        widget=widgets.ForeignKeyWidget(Site, 'name')
+    )
 
     lat = fields.Field(attribute="lat", column_name="Latitude")
     lon = fields.Field(attribute="lon", column_name="Longitude")
@@ -110,15 +113,27 @@ class CommonWaterResource(resources.ModelResource):
         attribute="time_sampled",
         column_name="Time Sampled"
     )
-    depth = fields.Field(attribute="depth", column_name="Depth (m)")
+    depth = fields.Field(attribute="depth", column_name="Depth")
     note = fields.Field(attribute="note", column_name="Note")
 
 
     def before_save_instance(self, instance, dry_run):
         """ set the site """
 
-        site = Site.get_or_create(instance.lat, instance.lon, instance.sample_site)
+        site = Site.get_or_create(instance.lat, instance.lon, instance.sample_site_name)
         instance.site = site
+
+    def dehydrate_lat(self, resource):
+        if resource.site:
+            return resource.site.get_lat()
+
+    def dehydrate_lon(self, resource):
+        if resource.site:
+            return resource.site.get_lon()
+
+    def dehydrate_sample_site_name(self, resource):
+        if resource.site:
+            return resource.site.name
 
 
 # Pelagic
@@ -146,9 +161,12 @@ class ContextualPelagicResource(CommonWaterResource):
     class Meta:
         model = ContextualPelagic
         import_id_fields = ('bpa_id', )
-
+        # exclude = ('site', )
         export_order = ('bpa_id',
-                        'site',
+                        'sample_site_name',
+                        'lat',
+                        'lon',
+                        'depth',
                         'date_sampled',
                         'time_sampled',
                         'note',
@@ -169,7 +187,7 @@ class ContextualPelagicResource(CommonWaterResource):
                         'chlorophyl',
                         'carbon_total',
                         'inorganic_carbon_total',
-                        'flux'
+                        'flux',
                         )
 
 class ContextualPelagicAdmin(ImportExportModelAdmin):
@@ -179,6 +197,7 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
             'date_sampled',
             'time_sampled',
             'site',
+            'depth',
             )
 
     _required = (
