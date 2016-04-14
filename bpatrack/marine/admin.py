@@ -39,31 +39,23 @@ from .models import (
         )
 
 
-# TransferLog
 class TransferLogResource(CommonTransferLogResource):
     class Meta(CommonTransferLogResource.Meta):
         model = TransferLog
 
-
 class TransferLogAdmin(CommonTransferLogAdmin):
     resource_class = TransferLogResource
 
-
-# Amplicon
 class AmpliconResource(CommonAmpliconResource):
     class Meta(CommonAmpliconResource.Meta):
         model = Amplicon
 
-
 class AmpliconAdmin(CommonAmpliconAdmin):
     resource_class = AmpliconResource
 
-
-# Metagenomic
 class MetagenomicResource(CommonMetagenomicResource):
     class Meta(CommonMetagenomicResource.Meta):
         model = Metagenomic
-
 
 class MetagenomicAdmin(CommonMetagenomicAdmin):
     resource_class = MetagenomicResource
@@ -88,6 +80,23 @@ class SampleStateTrackAdmin(ImportExportModelAdmin):
             'amplicon_ITS_data_generated',
             'minimum_contextual_data_received',
             'full_contextual_data_received'
+            )
+
+class CommonAdmin(ImportExportModelAdmin):
+    date_hierarchy = 'date_sampled'
+
+    list_display = (
+            'bpa_id',
+            'date_sampled',
+            'time_sampled',
+            'site',
+            'depth',
+            )
+
+    list_filter = (
+            'site__name',
+            'date_sampled',
+            'depth'
             )
 
 class CommonWaterResource(resources.ModelResource):
@@ -135,8 +144,6 @@ class CommonWaterResource(resources.ModelResource):
         if resource.site:
             return resource.site.name
 
-
-# Pelagic
 class ContextualPelagicResource(CommonWaterResource):
 
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
@@ -189,15 +196,8 @@ class ContextualPelagicResource(CommonWaterResource):
                         'flux',
                         )
 
-class ContextualPelagicAdmin(ImportExportModelAdmin):
+class ContextualPelagicAdmin(CommonAdmin):
     resource_class = ContextualPelagicResource
-    list_display = (
-            'bpa_id',
-            'date_sampled',
-            'time_sampled',
-            'site',
-            'depth',
-            )
 
     _required = (
             'bpa_id',
@@ -239,8 +239,6 @@ class ContextualPelagicAdmin(ImportExportModelAdmin):
                 }),
             )
 
-
-# Open Water
 class ContextualOpenWaterResource(CommonWaterResource):
 
     host_species = fields.Field(attribute="host_species", column_name="Host Species")
@@ -377,15 +375,13 @@ class ContextualOpenWaterResource(CommonWaterResource):
                         'zea',
                         )
 
-
-class ContextualOpenWaterAdmin(ImportExportModelAdmin):
+class ContextualOpenWaterAdmin(CommonAdmin):
     resource_class = ContextualOpenWaterResource
 
-    list_display = (
-            'bpa_id',
+    list_filter = (
+            'site__name',
             'date_sampled',
-            'site',
-            'depth',
+            'depth'
             )
 
     _required = (
@@ -460,7 +456,6 @@ class ContextualOpenWaterAdmin(ImportExportModelAdmin):
                 }),
             )
 
-
 class MarineResource(resources.ModelResource):
     """ SeaWeed, Coral and SeaGrass common resource """
 
@@ -482,8 +477,6 @@ class MarineResource(resources.ModelResource):
     class Meta:
         import_id_fields = ('bpa_id', )
 
-
-# sediment
 class SedimentResource(MarineResource):
 
     carbon = fields.Field(attribute="carbon", column_name="% total carbon")
@@ -492,12 +485,10 @@ class SedimentResource(MarineResource):
     phosphorous = fields.Field(attribute="phosphorous", column_name="% total phosphorous")
     sedimentation_rate = fields.Field(attribute="sedimentation_rate", column_name="sedimentation rate (g /(cm2 x y)r)")
 
-
 class SpongeResource(MarineResource):
 
     host_state = fields.Field(attribute="host_state", column_name="host state (free text field)")
     host_abundance = fields.Field(attribute="host_abundance", column_name="host abundance (individuals per m2)")
-
 
 class CommonResource(MarineResource):
     """ SeaWeed, Coral and SeaGrass common resource """
@@ -507,54 +498,29 @@ class CommonResource(MarineResource):
     host_state = fields.Field(attribute="host_state", column_name="Host State")
     host_abundance = fields.Field(attribute="host_abundance", column_name="Host Abundance")
 
-
 class CoralResource(CommonResource):
     class Meta(CommonResource.Meta):
         model = Coral
-
 
 class SeaGrassResource(CommonResource):
     class Meta(CommonResource.Meta):
         model = SeaGrass
 
-
 class SeaWeedResource(CommonResource):
     class Meta(CommonResource.Meta):
         model = SeaWeed
 
-
-class CommonAdmin(ImportExportModelAdmin):
-    list_display = (
-            'bpa_id',
-            'date_sampled',
-            'time_sampled',
-            'site',
-            )
-
-    list_filter = (
-            'bpa_id',
-            'date_sampled',
-            'time_sampled',
-            'site',
-            'depth'
-            )
-
-
 class SedimentAdmin(CommonAdmin):
     resource_class = SedimentResource
-
 
 class SpongeAdmin(CommonAdmin):
     resource_class = SpongeResource
 
-
 class CoralAdmin(CommonAdmin):
     resource_class = CoralResource
 
-
 class SeaWeedAdmin(CommonAdmin):
     resource_class = SeaWeedResource
-
 
 class SeaGrassAdmin(CommonAdmin):
     resource_class = SeaGrassResource
