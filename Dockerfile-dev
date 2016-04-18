@@ -3,7 +3,6 @@ FROM muccg/bpatrack-build
 MAINTAINER https://github.com/muccg/bpa-track/
 
 ENV DJANGO_SETTINGS_MODULE bpatrack.config.settings.local
-ENV DATABASE_URL=postgis://webapp:webapp@db:5432/webapp
 
 # At build time changing these args allow us to use a local devpi mirror
 # Unchanged, these defaults allow pip to behave as normal

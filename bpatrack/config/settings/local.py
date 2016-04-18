@@ -12,33 +12,32 @@ from .common import *  # noqa
 
 # DEBUG
 # ------------------------------------------------------------------------------
-DEBUG = env.bool('DJANGO_DEBUG', default=True)
+DEBUG = bool(env.get('DJANGO_DEBUG', True))
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # SECRET CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Note: This key only used for development and testing.
-SECRET_KEY = env("DJANGO_SECRET_KEY", default='a&35jr0qgxn-!fr4_8t!3+1ee)uq15n)%e*@v@f&u%81v22yxw')
+SECRET_KEY = env.get("DJANGO_SECRET_KEY", 'a&35jr0qgxn-!fr4_8t!3+1ee)uq15n)%e*@v@f&u%81v22yxw')
 
 
 # EMAIL
 # If mailgun env variables is set, use that
-if  env('DJANGO_MAILGUN_API_KEY', default="NOTSET") != "NOTSET":
-    MAILGUN_ACCESS_KEY = env('DJANGO_MAILGUN_API_KEY', default="NOTSET")
+if  env.get('DJANGO_MAILGUN_API_KEY', "NOTSET") != "NOTSET":
+    MAILGUN_ACCESS_KEY = env.get('DJANGO_MAILGUN_API_KEY', "NOTSET")
     EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-    MAILGUN_SERVER_NAME = env('DJANGO_MAILGUN_SERVER_NAME')
-    DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default='No Reply <no-reply@mg.ccgapps.com.au>')
-    EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default='[BPA Track] ')
-    SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
+    MAILGUN_SERVER_NAME = env.get('DJANGO_MAILGUN_SERVER_NAME')
+    DEFAULT_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
+    EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Track] ')
+    SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 else:
     # Console mail
-    EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+    EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
     EMAIL_HOST = 'localhost'
     EMAIL_PORT = 1025
 
 # CACHING
-# ------------------------------------------------------------------------------
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -47,7 +46,6 @@ CACHES = {
 }
 
 # django-debug-toolbar
-# ------------------------------------------------------------------------------
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 INSTALLED_APPS += ('debug_toolbar', )
 

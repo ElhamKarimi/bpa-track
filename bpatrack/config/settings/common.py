@@ -11,14 +11,14 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 from __future__ import absolute_import, unicode_literals
 
 import environ
-import djcelery
+from ccg_django_utils.conf import EnvConfig
 
 ROOT_DIR = environ.Path(__file__) - 4  # (/a/b/myfile.py - 3 = /)
 APPS_DIR = ROOT_DIR.path('bpatrack')
 
-env = environ.Env()
+env = EnvConfig()
 
-SCRIPT_NAME = env("HTTP_SCRIPT_NAME", default="")
+SCRIPT_NAME = env.get("HTTP_SCRIPT_NAME", default="")
 FORCE_SCRIPT_NAME = SCRIPT_NAME or None
 
 # APP CONFIGURATION
@@ -45,9 +45,6 @@ THIRD_PARTY_APPS = (
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
     'import_export',
-    'kombu.transport.django',
-    # 'djcelery',
-    # 'dynamic_scraper',
 )
 
 # Apps specific for this project go here.
@@ -82,7 +79,7 @@ MIGRATION_MODULES = {
 # DEBUG
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool("DJANGO_DEBUG", False)
+DEBUG = bool(env.get("DJANGO_DEBUG", False))
 
 # FIXTURE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -93,7 +90,7 @@ FIXTURE_DIRS = (
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -109,7 +106,14 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db()
+    'default': {
+        'ENGINE': env.get_db_engine("dbtype", "pgsql"),
+        'NAME': env.get("dbname", "bpatrack"),
+        'USER': env.get("dbuser", "bpatrack"),
+        'PASSWORD': env.get("dbpass", "bpatrack"),
+        'HOST': env.get("dbserver", ""),
+        'PORT': env.get("dbport", ""),
+    }
 }
 
 # GENERAL CONFIGURATION
@@ -177,7 +181,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 
-STATIC_ROOT = env("STATIC_ROOT", default=str(ROOT_DIR('static')))
+STATIC_ROOT = env.get("STATIC_ROOT",  str(ROOT_DIR('static')))
 STATIC_URL = '{0}/static/'.format(SCRIPT_NAME)
 
 
@@ -240,14 +244,3 @@ SUIT_CONFIG = {
     'SHOW_REQUIRED_ASTERISK': True,
     'ADMIN_NAME': 'Bioplatforms Australia Data Tracker',
 }
-
-# django-celery settings
-djcelery.setup_loader()
-BROKER_HOST = "localhost"
-BROKER_PORT = 5672
-BROKER_BACKEND = "django"
-BROKER_USER = "guest"
-BROKER_PASSWORD = "guest"
-BROKER_VHOST = "/"
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-
