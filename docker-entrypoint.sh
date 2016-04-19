@@ -47,7 +47,7 @@ defaults() {
     : ${CACHESERVER="cache"}
     : ${CACHEPORT="11211"}
 
-    : ${DBUSER="webapp"}
+    : ${DBUSER="bpatrack"}
     : ${DBNAME="${DBUSER}"}
     : ${DBPASS="${DBUSER}"}
 

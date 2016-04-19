@@ -8,8 +8,8 @@ db:
   build: .
   dockerfile: Dockerfile-postgis
   environment:
-    - POSTGRES_USER=webapp
-    - POSTGRES_PASSWORD=webapp
+    - POSTGRES_USER=bpatrack
+    - POSTGRES_PASSWORD=bpatrack
   ports:
     - "5432"
 
@@ -22,7 +22,7 @@ runserver:
   command: runserver
   environment:
     - DJANGO_SETTINGS_MODULE=bpatrack.config.settings.local
-    - DBUSER=webbapp
+    - DBUSER=bpatrack
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
     - DJANGO_MAILGUN_API_KEY=${DJANGO_MAILGUN_API_KEY}
@@ -38,7 +38,7 @@ uwsgi:
   image: bpatrack_runserver
   command: uwsgi
   environment:
-    - DBUSER=webapp
+    - DBUSER=bpatrack
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
     - WAIT_FOR_RUNSERVER=1

@@ -7,8 +7,8 @@ releasedatadev:
 releasedb:
   image: postgres:9.5
   environment:
-    - POSTGRES_USER=webapp
-    - POSTGRES_PASSWORD=webapp
+    - POSTGRES_USER=bpatrack
+    - POSTGRES_PASSWORD=bpatrack
   ports:
     - "5432"
 
@@ -21,7 +21,7 @@ releaserunserver:
   command: runserver
   environment:
     - DJANGO_SETTINGS_MODULE=config.settings.local
-    - DBUSER=webbapp
+    - DBUSER=bpatrack
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
   ports:
@@ -36,7 +36,7 @@ releaseuwsgi:
   image: bpatrack_runserver
   command: uwsgi
   environment:
-    - DBUSER=webapp
+    - DBUSER=bpatrack
     - WAIT_FOR_DB=1
     - WAIT_FOR_CACHE=1
     - WAIT_FOR_RUNSERVER=1

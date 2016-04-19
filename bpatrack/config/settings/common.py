@@ -107,7 +107,8 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': env.get_db_engine("dbtype", "pgsql"),
+        # 'ENGINE': env.get_db_engine("dbtype", "pgsql"),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': env.get("dbname", "bpatrack"),
         'USER': env.get("dbuser", "bpatrack"),
         'PASSWORD': env.get("dbpass", "bpatrack"),
