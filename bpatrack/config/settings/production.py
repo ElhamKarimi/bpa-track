@@ -16,7 +16,7 @@ from .common import *  # noqa
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Raises ImproperlyConfigured exception if DJANGO_SECRET_KEY not in os.environ
-SECRET_KEY = env("DJANGO_SECRET_KEY")
+SECRET_KEY = env.get("DJANGO_SECRET_KEY")
 
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
@@ -36,21 +36,19 @@ MIDDLEWARE_CLASSES = SECURITY_MIDDLEWARE + MIDDLEWARE_CLASSES
 
 # set this to 60 seconds and then to 518400 when you can prove it works
 SECURE_HSTS_SECONDS = 60
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
-    "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
-SECURE_FRAME_DENY = env.bool("DJANGO_SECURE_FRAME_DENY", default=True)
-SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
-    "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env.get( "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", True)
+SECURE_FRAME_DENY = env.get("DJANGO_SECURE_FRAME_DENY", True)
+SECURE_CONTENT_TYPE_NOSNIFF = env.get("DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", True)
 SECURE_BROWSER_XSS_FILTER = True
 SESSION_COOKIE_SECURE = False
 SESSION_COOKIE_HTTPONLY = True
-SECURE_SSL_REDIRECT = env.bool("DJANGO_SECURE_SSL_REDIRECT", default=True)
+SECURE_SSL_REDIRECT = env.get("DJANGO_SECURE_SSL_REDIRECT", True)
 
 # SITE CONFIGURATION
 # ------------------------------------------------------------------------------
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['staging.ccgapps.com.au', 'ccgapps.com.au'])
+ALLOWED_HOSTS = env.get('DJANGO_ALLOWED_HOSTS', 'downloads.bioplatforms.com')
 # END SITE CONFIGURATION
 
 
@@ -61,12 +59,12 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['staging.ccgapps.com.a
 
 # EMAIL
 # ------------------------------------------------------------------------------
-DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default='No Reply <no-reply@mg.ccgapps.com.au>')
+DEFAULT_FROM_EMAIL = env.get('DJANGO_DEFAULT_FROM_EMAIL', 'No Reply <no-reply@mg.ccgapps.com.au>')
 EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-MAILGUN_ACCESS_KEY = env('DJANGO_MAILGUN_API_KEY')
-MAILGUN_SERVER_NAME = env('DJANGO_MAILGUN_SERVER_NAME')
-EMAIL_SUBJECT_PREFIX = env("DJANGO_EMAIL_SUBJECT_PREFIX", default='[BPA Track] ')
-SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
+MAILGUN_ACCESS_KEY = env.get('DJANGO_MAILGUN_API_KEY')
+MAILGUN_SERVER_NAME = env.get('DJANGO_MAILGUN_SERVER_NAME')
+EMAIL_SUBJECT_PREFIX = env.get("DJANGO_EMAIL_SUBJECT_PREFIX", '[BPA Track] ')
+SERVER_EMAIL = env.get('DJANGO_SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
 
 # TEMPLATE CONFIGURATION
