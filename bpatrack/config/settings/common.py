@@ -95,10 +95,9 @@ EMAIL_BACKEND = env.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.smtp.
 # MANAGER CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = (
-    ("CCG", 'info@ccg.murdoch.edu.au'),
-)
-
+ADMINS = [
+    ('alerts', env.get("ALERT_EMAIL", "alerts@ccg.murdoch.edu.au"))
+]
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
