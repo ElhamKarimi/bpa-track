@@ -32,41 +32,41 @@ usage() {
   Wrapper script to call common tools while developing ${PROJECT_NAME}
 
   Environment:
-    Pull during docker build   DOCKER_PULL                 ${DOCKER_PULL}
-    No cache during build      DOCKER_NO_CACHE             ${DOCKER_NO_CACHE}
-    Use proxy during builds    DOCKER_BUILD_PROXY          ${DOCKER_BUILD_PROXY}
-    Push/pull from docker hub  DOCKER_USE_HUB              ${DOCKER_USE_HUB}
-    Release docker image       DOCKER_IMAGE                ${DOCKER_IMAGE}
-    Use a http proxy           SET_HTTP_PROXY              ${SET_HTTP_PROXY}
-    Use a pip proxy            SET_PIP_PROXY               ${SET_PIP_PROXY}
-    Use mailgun to send mail   DJANGO_MAILGUN_API_KEY      ${DJANGO_MAILGUN_API_KEY}
+  Pull during docker build   DOCKER_PULL                 ${DOCKER_PULL}
+  No cache during build      DOCKER_NO_CACHE             ${DOCKER_NO_CACHE}
+  Use proxy during builds    DOCKER_BUILD_PROXY          ${DOCKER_BUILD_PROXY}
+  Push/pull from docker hub  DOCKER_USE_HUB              ${DOCKER_USE_HUB}
+  Release docker image       DOCKER_IMAGE                ${DOCKER_IMAGE}
+  Use a http proxy           SET_HTTP_PROXY              ${SET_HTTP_PROXY}
+  Use a pip proxy            SET_PIP_PROXY               ${SET_PIP_PROXY}
+  Use mailgun to send mail   DJANGO_MAILGUN_API_KEY      ${DJANGO_MAILGUN_API_KEY}
 
   Usage: ${PROGNAME} options
 
   OPTIONS:
-    dev            Pull up stack and start developing
-    dev_rebuild    Rebuild dev stack images
-    baseimage      Build base image
-    buildimage     Build build image
-    devimage       Build dev image
-    releaseimage   Build release image
-    releasetarball Produce release tarball artifact
-    shell          Create and shell into a new web image, used for db checking with Django env available
-    superuser      Create Django superuser
-    runscript      Run one of the available scripts
-    checksecure    Run security check
-    up             Spins up docker development stack
-    rm             Remove all containers
-    pythonlint     Run python lint
-    unit_tests     Run unit tests
-    usage          Print this usage
-    help           Print this usage
+  dev            Pull up stack and start developing
+  dev_rebuild    Rebuild dev stack images
+  baseimage      Build base image
+  buildimage     Build build image
+  devimage       Build dev image
+  releaseimage   Build release image
+  releasetarball Produce release tarball artifact
+  shell          Create and shell into a new web image, used for db checking with Django env available
+  superuser      Create Django superuser
+  runscript      Run one of the available scripts
+  checksecure    Run security check
+  up             Spins up docker development stack
+  rm             Remove all containers
+  pythonlint     Run python lint
+  unit_tests     Run unit tests
+  usage          Print this usage
+  help           Print this usage
 
 
-    Example, start dev with no proxy and rebuild everything:
-    SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ${PROGNAME} dev_rebuild
-    ${PROGNAME} dev_rebuild
-    ${PROGNAME} dev
+  Example, start dev with no proxy and rebuild everything:
+  SET_PIP_PROXY=0 SET_HTTP_PROXY=0 ${PROGNAME} dev_rebuild
+  ${PROGNAME} dev_rebuild
+  ${PROGNAME} dev
 EOF
   exit 1
 }
@@ -145,22 +145,22 @@ _http_proxy() {
 }
 
 _pip_proxy() {
-    info 'pip proxy'
+  info 'pip proxy'
 
-    # pip defaults
-    PIP_INDEX_URL='https://pypi.python.org/simple'
-    PIP_TRUSTED_HOST='127.0.0.1'
+  # pip defaults
+  PIP_INDEX_URL='https://pypi.python.org/simple'
+  PIP_TRUSTED_HOST='127.0.0.1'
 
-    if [ ${SET_PIP_PROXY} = "1" ]; then
-        # use a local devpi install
-        PIP_INDEX_URL="http://${DOCKER_ROUTE}:3141/root/pypi/+simple/"
-        PIP_TRUSTED_HOST="${DOCKER_ROUTE}"
-    fi
+  if [ ${SET_PIP_PROXY} = "1" ]; then
+    # use a local devpi install
+    PIP_INDEX_URL="http://${DOCKER_ROUTE}:3141/root/pypi/+simple/"
+    PIP_TRUSTED_HOST="${DOCKER_ROUTE}"
+  fi
 
-    CMD_ENV="${CMD_ENV} NO_PROXY=${DOCKER_ROUTE} no_proxy=${DOCKER_ROUTE} PIP_INDEX_URL=${PIP_INDEX_URL} PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}"
-    DOCKER_BUILD_PIP_PROXY='--build-arg ARG_PIP_INDEX_URL='${PIP_INDEX_URL}' --build-arg ARG_PIP_TRUSTED_HOST='${PIP_TRUSTED_HOST}''
+  CMD_ENV="${CMD_ENV} NO_PROXY=${DOCKER_ROUTE} no_proxy=${DOCKER_ROUTE} PIP_INDEX_URL=${PIP_INDEX_URL} PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}"
+  DOCKER_BUILD_PIP_PROXY='--build-arg ARG_PIP_INDEX_URL='${PIP_INDEX_URL}' --build-arg ARG_PIP_TRUSTED_HOST='${PIP_TRUSTED_HOST}''
 
-    success "Pip index url ${PIP_INDEX_URL}"
+  success "Pip index url ${PIP_INDEX_URL}"
 }
 
 # figure out what branch/tag we are on, write out .version file
@@ -218,8 +218,8 @@ create_build_image() {
   set -x
   # don't try and pull the build image
   (
-    ${CMD_ENV}
-    docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} --build-arg ARG_GIT_TAG=${gittag} -t muccg/${PROJECT_NAME}-build -f Dockerfile-build .
+  ${CMD_ENV}
+  docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} --build-arg ARG_GIT_TAG=${gittag} -t muccg/${PROJECT_NAME}-build -f Dockerfile-build .
   )
   set +x
   success "$(docker images | grep muccg/${PROJECT_NAME}-build | sed 's/  */ /g')"
@@ -227,27 +227,27 @@ create_build_image() {
 
 
 create_base_image() {
-    info 'create base image'
-    set -x
-    (
-    ${CMD_ENV}; docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
-    set +x
-    success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
+  info 'create base image'
+  set -x
+  (
+  ${CMD_ENV}; docker build ${DOCKER_BUILD_NOCACHE} ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_PULL} -t muccg/${PROJECT_NAME}-base -f Dockerfile-base .)
+  set +x
+  success "$(docker images | grep muccg/${PROJECT_NAME}-base | sed 's/  */ /g')"
 }
 
 create_release_tarball() {
-    info 'create release tarball'
-    mkdir -p build
-    chmod o+rwx build
+  info 'create release tarball'
+  mkdir -p build
+  chmod o+rwx build
 
-    set -x
-    local volume=$(readlink -f ./build/)
-    (
-    ${CMD_ENV}
-    docker run ${DOCKER_RUN_OPTS} --rm -v ${volume}:/data muccg/${PROJECT_NAME}-build tarball
-    )
-    set +x
-    success "$(ls -lh build/*)"
+  set -x
+  local volume=$(readlink -f ./build/)
+  (
+  ${CMD_ENV}
+  docker run ${DOCKER_RUN_OPTS} --rm -v ${volume}:/data muccg/${PROJECT_NAME}-build tarball
+  )
+  set +x
+  success "$(ls -lh build/*)"
 }
 
 
@@ -315,8 +315,8 @@ _docker_release_build() {
     set -x
     # don't try and pull the base image
     (
-      ${CMD_ENV}
-      docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f ${dockerfile} .
+    ${CMD_ENV}
+    docker build ${DOCKER_BUILD_PROXY} ${DOCKER_BUILD_NOCACHE} --build-arg ARG_GIT_TAG=${gittag} -t ${tag} -f ${dockerfile} .
     )
     success "built ${tag}"
 
